@@ -1,15 +1,15 @@
 # bash.d
 
-a bash autoloader
+a bash auto-loader
 
-bash.d is an out-of-bag themed, machine learning directory autoloader for modern (bash) shell source.
+or, an out-of-bag themed, machine learning directory auto-loader for bash shell source.
 
 ## basic user install
 
 1) Get `00bd.sh` into your home directory.
 
 ```sh
-cd && curl --create-dirs --output etc/bash.d/00bd.sh https://raw.githubusercontent.com/josephtingiris/bash.d/main/00bd.sh
+cd && curl --create-dirs --output etc/bash.d/00bd.sh https://raw.githubusercontent.com/bash-d/bd/main/00bd.sh
 ```
 
 2) And, add this to the end of your `.bash_profile` or `.bashrc`.
@@ -24,7 +24,7 @@ Note: For the `bd` alias to work, be sure to pass any arguments with ${@}.
 1) Optionally, get `Z00bd.sh` into /etc/profile.d, e.g.
 
 ```sh
-cd /etc/profile.d && sudo curl --output Z00bd.sh https://raw.githubusercontent.com/josephtingiris/bash.d/main/00bd.sh && chmod 0644 Z00bd.sh
+cd /etc/profile.d && sudo curl --output Z00bd.sh https://raw.githubusercontent.com/bash-d/bd/main/00bd.sh && chmod 0644 Z00bd.sh
 ```
 
 ## environment variables
@@ -42,7 +42,7 @@ cd /etc/profile.d && sudo curl --output Z00bd.sh https://raw.githubusercontent.c
 
 ## license
 
-https://github.com/josephtingiris/bash.d/blob/main/LICENSE.md
+https://github.com/bash-d/bd/blob/main/LICENSE.md
 
 ## motivation
 
