@@ -1,8 +1,8 @@
 # bash.d
 
-a bash auto-loader
+a bash autoloader
 
-or, an out-of-bag themed, machine learning directory auto-loader for bash shell source.
+or, an out-of-bag themed, machine learning directory autoloader for bash shell source
 
 ## basic user install
 
