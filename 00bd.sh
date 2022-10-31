@@ -1,9 +1,9 @@
 # Copyright (c) 2022 Joseph Tingiris
-# https://github.com/bd/bd/blob/main/LICENSE.md
+# https://github.com/bash-d/bd/blob/main/LICENSE.md
 
 # 00bd.sh: an out-of-bag themed, machine learning directory autoloader for bash shell source
 
-# https://github.com/bd/bd/blob/main/README.md
+# https://github.com/bash-d/bd/blob/main/README.md
 
 BD_VERSION=0.30
 
@@ -22,7 +22,7 @@ fi
 
 BD_CONF_FILE=".bash.d.conf"
 BD_SUB_DIR="etc/bash.d"
-BD_UPDATE_URL="https://raw.githubusercontent.com/bd/bd/main/00bd.sh"
+BD_UPDATE_URL="https://raw.githubusercontent.com/bash-d/bd/main/00bd.sh"
 
 SHELL="${SHELL:-$(command -v sh 2> /dev/null)}"
 
