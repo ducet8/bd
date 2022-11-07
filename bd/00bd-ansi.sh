@@ -4,7 +4,7 @@
 function bd_ansi() {
     local code="${1}"
 
-    [ ${BD_DEBUG} ] && [ ${BD_DEBUG} -gt 0 ] && echo "code=$code" 1>&2
+    [ ${BD_DEBUG} ] && [ ${BD_DEBUG} -gt 2 ] && echo "code=$code" 1>&2
 
     [ -z "${code}" ] && return 0
 

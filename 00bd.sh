@@ -5,7 +5,7 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-BD_VERSION=0.30
+BD_VERSION=0.31
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
@@ -36,7 +36,7 @@ export BD_DEBUG=${BD_DEBUG:-0} # level >0 enables debugging
 function bd_aliases() {
     bd_debug "function ${FUNCNAME}(${@})" 15
 
-    alias bd="source ${BD_HOME}/.bashrc reload"
+    alias bd="source ${BD_HOME}/.bashrc"
 }
 
 # add a specific subdirectory via bd_bagger; a single 'bag' is simply a subdirectory in ${BD_PATH}
@@ -64,7 +64,7 @@ function bd_bag() {
         bd_bagger "${bag_dir}"
     done
 
-    unset bag_dir
+    unset -v bag_dir
 }
 
 # add unique, existing directories to the global BD_BAG_DIRS array (& preserve the natural order)
@@ -91,11 +91,11 @@ function bd_bagger() {
         [ ${bd_dir_exists} -eq 1 ] && break
         [ "${bd_dir}" == "${bd_bagger_dir}" ] && bd_dir_exists=1
     done
-    unset bd_dir
+    unset -v bd_dir
 
     [ ${bd_dir_exists} -eq 0 ] && BD_BAG_DIRS+=("${bd_bagger_dir}") && bd_debug "bd_bagger_dir = ${bd_bagger_dir}" 2
 
-    unset bd_dir_exists
+    unset -v bd_dir_exists
 }
 
 # add specific directories listed in a file, via bd_bag & bd_bagger
@@ -133,9 +133,9 @@ function bd_bagger_file() {
             fi
 
         done < "${bd_bagger_file_name}"
-        unset bd_dir
+        unset -v bd_dir
     fi
-    unset bd_bagger_file_name
+    unset -v bd_bagger_file_name
 }
 
 # formatted debug output
@@ -190,7 +190,7 @@ function bd_load() {
             bd_debug "bd_loader ${bd_bag_dir}"
         fi
     done
-    unset bd_bag_dir bd_loader_finish bd_loader_start bd_loader_total
+    unset -v bd_bag_dir bd_loader_finish bd_loader_start bd_loader_total
 }
 
 # source everything in a given directory (that ends in .sh)
@@ -245,8 +245,8 @@ function bd_realdir() {
 function bd_reload() {
     bd_debug "function ${FUNCNAME}(${@})" 15
 
-    unset BD_ID
-    [ -r "/etc/bashrc" ] && bd_debug "unset BASHRCSOURCED" 2 && unset BASHRCSOURCED && source /etc/bashrc
+    unset -v BD_ID
+    [ -r "/etc/bashrc" ] && bd_debug "unset -v BASHRCSOURCED" 2 && unset -v BASHRCSOURCED && source /etc/bashrc
 }
 
 # upgrade to the latest version of 00bd.sh
@@ -256,13 +256,13 @@ function bd_update() {
     local bd_update_dir="$1"
 
     if [ -d "${bd_update_dir}" ]; then
-        local here="${PWD}"
+        local bd_update_pwd="${PWD}"
         cd "${bd_update_dir}"
         printf "\n# curl ${BD_UPDATE_URL}\n\n"
         curl --create-dirs --output ${BD_SUB_DIR}/00bd.sh "${BD_UPDATE_URL}"
         printf "\n"
-        cd "${here}"
-        unset here
+        cd "${bd_update_pwd}"
+        unset -v bd_update_pwd
     fi
 }
 
@@ -290,7 +290,7 @@ bd_debug started
 # handle arguments
 #
 
-if [ "${1}" == "reload" ]; then
+if [ "${1}" == "" ] || [ "${1}" == "reload" ]; then
     bd_debug reload
 
     bd_reload
@@ -414,7 +414,7 @@ bd_aliases
 
 bd_load "${BD_BAG_DIRS[@]}"
 
-export BD_ID BD_HOME BD_UPDATE_URL BD_VERSION
+export BD_ID BD_HOME BD_VERSION
 
 #
 # metadata
