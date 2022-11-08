@@ -5,7 +5,7 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-BD_VERSION=0.31
+BD_VERSION=0.32
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
@@ -31,6 +31,11 @@ export BD_DEBUG=${BD_DEBUG:-0} # level >0 enables debugging
 #
 # functions
 #
+
+# stub bd_ansi (for bd_debug)
+function bd_ansi() {
+    return
+}
 
 # update bd aliases
 function bd_aliases() {
@@ -178,14 +183,18 @@ function bd_load() {
 
     [ -z "${1}" ] && return 1
 
-    local bd_bag_dir bd_loader_finish bd_loader_start bd_loader_total
+    local bd_bag_dir bd_loader_finish bd_loader_start bd_loader_total bd_loader_total_ms
     for bd_bag_dir in "${@}"; do
         [ ${#BD_DEBUG} -gt 0 ] && bd_loader_start=$(bd_uptime_ms)
         bd_loader "${bd_bag_dir}"
         if [ ${#BD_DEBUG} -gt 0 ]; then
             bd_loader_finish=$(bd_uptime_ms)
             bd_loader_total=$((${bd_loader_finish}-${bd_loader_start}))
-            bd_debug "bd_loader ${bd_bag_dir} [${bd_loader_total}ms]"
+            [ ${bd_loader_total} -le 100 ] && bd_loader_total_ms="$(bd_ansi fg_green1)${bd_loader_total}ms$(bd_ansi reset)"
+            [ ${bd_loader_total} -gt 100 ] && bd_loader_total_ms="$(bd_ansi fg_magenta1)${bd_loader_total}ms$(bd_ansi reset)"
+            [ ${bd_loader_total} -gt 499 ] && bd_loader_total_ms="$(bd_ansi fg_yellow1)${bd_loader_total}ms$(bd_ansi reset)"
+            [ ${bd_loader_total} -gt 999 ] && bd_loader_total_ms="$(bd_ansi fg_red1)${bd_loader_total}ms$(bd_ansi reset)"
+            bd_debug "bd_loader ${bd_bag_dir} [${bd_loader_total_ms}]"
         else
             bd_debug "bd_loader ${bd_bag_dir}"
         fi
@@ -211,7 +220,7 @@ function bd_loader() {
 
             if [ -r "${bd_dir_sh}" ]; then
                 if [ ${#BD_DEBUG} -gt 0 ]; then
-                    local bd_source_finish bd_source_start bd_source_total
+                    local bd_source_finish bd_source_start bd_source_total bd_source_total_ms
                     bd_source_start=$(bd_uptime_ms)
                 fi
 
@@ -220,7 +229,11 @@ function bd_loader() {
                 if [ ${#BD_DEBUG} -gt 0 ]; then
                     bd_source_finish=$(bd_uptime_ms)
                     bd_source_total=$((${bd_source_finish}-${bd_source_start}))
-                    bd_debug "source ${bd_dir_sh} [${bd_source_total}ms]" 2
+                    [ ${bd_source_total} -le 100 ] && bd_source_total_ms="$(bd_ansi fg_green1)${bd_source_total}ms$(bd_ansi reset)"
+                    [ ${bd_source_total} -gt 100 ] && bd_source_total_ms="$(bd_ansi fg_magenta1)${bd_source_total}ms$(bd_ansi reset)"
+                    [ ${bd_source_total} -gt 499 ] && bd_source_total_ms="$(bd_ansi fg_yellow1)${bd_source_total}ms$(bd_ansi reset)"
+                    [ ${bd_source_total} -gt 999 ] && bd_source_total_ms="$(bd_ansi fg_red1)${bd_source_total}ms$(bd_ansi reset)"
+                    bd_debug "source ${bd_dir_sh} [${bd_source_total_ms}]" 2
                 fi
             fi
         done

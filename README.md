@@ -27,6 +27,8 @@ Note: For the `bd` alias to work, be sure to pass any arguments with ${@}.
 cd /etc/profile.d && sudo curl --output Z00bd.sh https://raw.githubusercontent.com/bash-d/bd/main/00bd.sh && chmod 0644 Z00bd.sh
 ```
 
+## development install
+
 ## environment variables
 
 * `BD_DEBUG` = `<LEVEL>` # Integer > 0.  Enable additional debugging output to stderr.
