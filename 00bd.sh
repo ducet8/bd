@@ -5,7 +5,7 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-BD_VERSION=0.32
+BD_VERSION=0.33
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
@@ -147,33 +147,56 @@ function bd_bagger_file() {
 function bd_debug() {
 
     [ -z "${1}" ] && return 0
+
+    [ -z "${BD_DEBUG}" ] && return 0
+    [[ ! "${BD_DEBUG}" =~ ^[0-9]+$ ]] && BD_DEBUG=0
+    [ "${BD_DEBUG}" == "0" ] && return 0
+
+    local bd_debug_msg=(${@})
+
+    local bd_debug_level=${bd_debug_msg[${#bd_debug_msg[@]}-1]}
+    if [[ "${bd_debug_level}" =~ ^[0-9]+$ ]]; then
+        unset bd_debug_msg[${#bd_debug_msg[@]}-1] # remove level from bd_debug_msg; TODO: test with older bash versions
+    else
+        bd_debug_level=0
+    fi
+
+    [ ${BD_DEBUG} -eq 0 ] && [ ${bd_debug_level} -eq 0 ] && return 0
+
+    if [ ${bd_debug_level} -le ${BD_DEBUG} ]; then
+        bd_debug_msg="${bd_debug_msg[@]}"
+
+        local bd_debug_bash_source=""
+        if [ ${BD_DEBUG} -ge 15 ]; then
+            bd_debug_bash_source="${BASH_SOURCE}"
+        else
+            bd_debug_bash_source="${BASH_SOURCE##*/}"
+        fi
+        local bd_debug_color
+        let bd_debug_color=${bd_debug_level}+11
+        printf "$(bd_ansi reset)$(bd_ansi fg${bd_debug_color})[BD_DEBUG:%+2b:%b] [%b] %b$(bd_ansi reset)\n" "${bd_debug_level}" "${BD_DEBUG}" "${bd_debug_bash_source}" "${bd_debug_msg}" 1>&2
+    fi
+
+    return 0
+}
+
+# colored debug output for milliseconds
+function bd_debug_ms() {
+
+    [ -z "${1}" ] && return 0
     [ -z "${BD_DEBUG}" ] && return 0
     [ "${BD_DEBUG}" == "0" ] && return 0
 
-    local debug_msg=(${@})
+    local bd_debug_ms_int=${1} bd_debug_ms_msg
 
-    [[ ! "${BD_DEBUG}" =~ ^[0-9]+$ ]] && BD_DEBUG=0
+    [[ ! "${bd_debug_ms_int}" =~ ^[0-9]+$ ]] && return
 
-    local debug_level=${debug_msg[${#debug_msg[@]}-1]}
-    if [[ "${debug_level}" =~ ^[0-9]+$ ]]; then
-        unset debug_msg[${#debug_msg[@]}-1] # remove level from debug_msg; TODO: test with older bash versions
-    else
-        debug_level=0
-    fi
+    [ ${bd_debug_ms_int} -le 100 ] && bd_debug_ms_msg="$(bd_ansi fg_green1)[${bd_debug_ms_int}ms]$(bd_ansi reset)"
+    [ ${bd_debug_ms_int} -gt 100 ] && bd_debug_ms_msg="$(bd_ansi fg_magenta1)[${bd_debug_ms_int}ms]$(bd_ansi reset)"
+    [ ${bd_debug_ms_int} -gt 499 ] && bd_debug_ms_msg="$(bd_ansi fg_yellow1)[${bd_debug_ms_int}ms]$(bd_ansi reset)"
+    [ ${bd_debug_ms_int} -gt 999 ] && bd_debug_ms_msg="$(bd_ansi fg_red1)[${bd_debug_ms_int}ms]$(bd_ansi reset)"
 
-    [ ${BD_DEBUG} -eq 0 ] && [ ${debug_level} -eq 0 ] && return 0
-
-    if [ ${debug_level} -le ${BD_DEBUG} ]; then
-        debug_msg="${debug_msg[@]}"
-
-        local debug_src=""
-        if [ ${BD_DEBUG} -ge 15 ]; then
-            debug_src="${BASH_SOURCE}"
-        else
-            debug_src="${BASH_SOURCE##*/}"
-        fi
-        printf "[BD_DEBUG:%+2b:%b] [%b] %b\n" "${debug_level}" "${BD_DEBUG}" "${debug_src}" "${debug_msg}" 1>&2
-    fi
+    printf "${bd_debug_ms_msg}" # use as subshell; does not output to stderr
 
     return 0
 }
@@ -190,11 +213,8 @@ function bd_load() {
         if [ ${#BD_DEBUG} -gt 0 ]; then
             bd_loader_finish=$(bd_uptime_ms)
             bd_loader_total=$((${bd_loader_finish}-${bd_loader_start}))
-            [ ${bd_loader_total} -le 100 ] && bd_loader_total_ms="$(bd_ansi fg_green1)${bd_loader_total}ms$(bd_ansi reset)"
-            [ ${bd_loader_total} -gt 100 ] && bd_loader_total_ms="$(bd_ansi fg_magenta1)${bd_loader_total}ms$(bd_ansi reset)"
-            [ ${bd_loader_total} -gt 499 ] && bd_loader_total_ms="$(bd_ansi fg_yellow1)${bd_loader_total}ms$(bd_ansi reset)"
-            [ ${bd_loader_total} -gt 999 ] && bd_loader_total_ms="$(bd_ansi fg_red1)${bd_loader_total}ms$(bd_ansi reset)"
-            bd_debug "bd_loader ${bd_bag_dir} [${bd_loader_total_ms}]"
+            bd_loader_total_ms="$(bd_debug_ms ${bd_loader_total})"
+            bd_debug "bd_loader ${bd_bag_dir} ${bd_loader_total_ms}"
         else
             bd_debug "bd_loader ${bd_bag_dir}"
         fi
@@ -229,11 +249,8 @@ function bd_loader() {
                 if [ ${#BD_DEBUG} -gt 0 ]; then
                     bd_source_finish=$(bd_uptime_ms)
                     bd_source_total=$((${bd_source_finish}-${bd_source_start}))
-                    [ ${bd_source_total} -le 100 ] && bd_source_total_ms="$(bd_ansi fg_green1)${bd_source_total}ms$(bd_ansi reset)"
-                    [ ${bd_source_total} -gt 100 ] && bd_source_total_ms="$(bd_ansi fg_magenta1)${bd_source_total}ms$(bd_ansi reset)"
-                    [ ${bd_source_total} -gt 499 ] && bd_source_total_ms="$(bd_ansi fg_yellow1)${bd_source_total}ms$(bd_ansi reset)"
-                    [ ${bd_source_total} -gt 999 ] && bd_source_total_ms="$(bd_ansi fg_red1)${bd_source_total}ms$(bd_ansi reset)"
-                    bd_debug "source ${bd_dir_sh} [${bd_source_total_ms}]" 2
+                    bd_source_total_ms=$(bd_debug_ms ${bd_source_total})
+                    bd_debug "source ${bd_dir_sh} ${bd_source_total_ms}" 3
                 fi
             fi
         done

@@ -1,18 +1,17 @@
 # Copyright (c) 2022 Joseph Tingiris
 # https://github.com/josephtingiris/bash.d/blob/main/LICENSE.md
 
+# DO NOT USE bd_debug() inside this function!
 function bd_ansi() {
-    local code="${1}"
+    local bd_ansi_code="${1}"
 
-    [ ${BD_DEBUG} ] && [ ${BD_DEBUG} -gt 2 ] && echo "code=$code" 1>&2
-
-    [ -z "${code}" ] && return 0
+    [ "${bd_ansi_code}" == "" ] && return 0
 
     [[ "${TERM}" != *"color"* ]] && return 0
 
     # all color 256 terms should support these ...
 
-    case ${code} in
+    case ${bd_ansi_code} in
         blink) echo -ne "\e[5m" ;;
         bold) echo -ne "\e[1m" ;;
         dim) echo -ne "\e[2m" ;;
@@ -94,8 +93,13 @@ function bd_ansi() {
         fg_magenta3) echo -ne "\e[38;5;129m" ;;
         fg_magenta4) echo -ne "\e[38;5;93m" ;;
         fg_magenta5) echo -ne "\e[38;5;57m" ;;
+
+        bg*) bd_ansi_code=${bd_ansi_code/bg/}; bd_ansi_code=${bd_ansi_code//_/}; [[ "${bd_ansi_code}" =~ ^[0-9]+$ ]] && echo -ne "\e[48;5;${bd_ansi_code}m" ;;
+
+        fg*) bd_ansi_code=${bd_ansi_code/fg/}; bd_ansi_code=${bd_ansi_code//_/}; [[ "${bd_ansi_code}" =~ ^[0-9]+$ ]] && echo -ne "\e[38;5;${bd_ansi_code}m" ;;
+
         *)
-            echo "${FUNCNAME} no code for '${code}'" 1>&2
+            echo "${FUNCNAME} no bd_ansi_code for '${bd_ansi_code}'" 1>&2
             ;;
     esac
 

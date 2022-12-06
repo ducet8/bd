@@ -2,8 +2,6 @@
 
 a bash autoloader
 
-or, an out-of-bag themed, machine learning directory autoloader for bash shell source
-
 ## basic user install
 
 1) Get `00bd.sh` into your home directory.
@@ -15,7 +13,7 @@ cd && curl --create-dirs --output etc/bash.d/00bd.sh https://raw.githubuserconte
 2) And, add this to the end of your `.bash_profile` or `.bashrc`.
 
 ```sh
-[ -r ~/etc/bash.d/00bd.sh ] && source ~/etc/bash.d/00bd.sh ${@}
+[ -r ~/etc/bash.d/00bd.sh ] && export BD_DEBUG=${BD_DEBUG:-0} && source ~/etc/bash.d/00bd.sh ${@}
 ```
 Note: For the `bd` alias to work, be sure to pass any arguments with ${@}.
 
