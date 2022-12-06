@@ -289,6 +289,10 @@ function bd_uptime_ms() {
         read up rest < /proc/uptime; t1="${up%.*}${up#*.}"
         # else TODO darwin
         ms=$(( 10*(t1) ))
+    else
+        #mac; use sysctl
+        boottime=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
+        ms=$(( 1000*($(date +%s) - ${boottime}) ))
     fi
     printf ${ms}
 }
