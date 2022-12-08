@@ -5,7 +5,7 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-BD_VERSION=0.33
+export BD_VERSION=0.34
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
@@ -311,7 +311,8 @@ function bd_uptime_ms() {
         boottime=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
         ms=$(( 1000*($(date +%s) - ${boottime}) ))
     fi
-    printf ${ms}
+
+    printf "${ms}"
 }
 
 #
@@ -346,7 +347,13 @@ fi
 
 bd_debug init
 
-printf -v BD_ID '%(%y%m%d%H%M%S%z)T' && export BD_ID # prevent concurrent executions
+if [ ${BASH_VERSINFO[0]} -ge 4 ]; then
+    printf -v BD_ID '%(%y%m%d%H%M%S%z)T'
+else
+    BD_ID="$(date +%y%m%d%H%M%S%z)" # posix
+fi
+
+export BD_ID # prevent concurrent executions
 
 #
 # 0 - export BD_USER & BD_HOME; (WIP)
@@ -404,7 +411,7 @@ bd_bag "bd"
 [ ${#BD_USER} -gt 0 ] && [ "${BD_USER}" != "${LOGNAME}" ] && bd_bag "${BD_USER}"
 [ ${#USER} -gt 0 ] && [ "${USER}" != "${LOGNAME}" ] && bd_bag "${USER}"
 [ ${#USERNAME} -gt 0 ] && [ "${USERNAME}" != "${LOGNAME}" ] && bd_bag "${USERNAME}"
-[ ${#LOGNAME} -gt 0 ] && bd_bag "${LOGNAME}" # LOGNAME is posix
+[ ${#LOGNAME} -gt 0 ] && bd_bag "${LOGNAME}" # posix
 
 # if BD_HOME is not set (externaly), then nothing will happen
 if [ "${BD_HOME}" != "${HOME}" ]; then
@@ -414,6 +421,8 @@ if [ "${BD_HOME}" != "${HOME}" ]; then
         [ -r "${BD_HOME}/${BD_SUB_DIR}" ] && [ -d "${BD_HOME}/${BD_SUB_DIR}" ] && bd_bagger "${BD_HOME}/${BD_SUB_DIR}"
     fi
 fi
+
+export BD_HOME
 
 #
 # 4 - add $HOME via bd_bagger & bd_bagger_file
@@ -448,12 +457,9 @@ bd_aliases
 
 bd_load "${BD_BAG_DIRS[@]}"
 
-export BD_ID BD_HOME BD_VERSION
-
 #
 # metadata
 #
 
 # vim:ts=4:sw=4
-# bash.d: imports BASH_SOURCE BD_DEBUG BD_ID
-# bash.d: exports BD_ID BD_HOME BD_UPDATE_URL BD_VERSION
+# bash.d: exports BD_DEBUG BD_ID BD_HOME BD_USER BD_VERSION

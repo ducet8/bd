@@ -8,7 +8,14 @@ BD_OS="unknown"
 if type -P uname &> /dev/null; then
     BD_KERNEL_NAME="$(uname -s 2> /dev/null)"
 
-    case "${BD_KERNEL_NAME,,}" in
+    if [ ${BASH_VERSINFO[0]} -ge 4 ]; then
+        BD_KERNEL_NAME=${BD_KERNEL_NAME,,}
+    else
+        BD_KERNEL_NAME="$(tr [A-Z] [a-z] <<< "${BD_KERNEL_NAME}")"
+
+    fi
+
+    case "${BD_KERNEL_NAME}" in
         bsd*)                       BD_OS="bsd";;
         cygwin*|mingw*|win*)        BD_OS="windows";;
         darwin*)                    BD_OS="darwin";;
