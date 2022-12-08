@@ -5,13 +5,13 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-export BD_VERSION=0.34
+export BD_VERSION=0.35
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
 
 # prevent non-sourced execution (for now; function bd_status(), etc. later ...)
-if [ ${0} == ${BASH_SOURCE} ]; then
+if [ "${0}" == "${BASH_SOURCE}" ]; then
     printf "\n${BASH_SOURCE} | ERROR | this code is not designed to be executed (instead, 'source ${BASH_SOURCE}')\n\n"
     exit 1
 fi
@@ -117,7 +117,7 @@ function bd_bagger_file() {
             bd_debug "1 bd_dir = ${bd_dir}" 3
 
             # strip comments
-            [ ${bd_dir:0:1} == "#" ] && continue
+            [ "${bd_dir:0:1}" == "#" ] && continue
             bd_dir=${bd_dir%% #*}
             bd_dir=${bd_dir%%#*}
             bd_debug "2 bd_dir = ${bd_dir}" 3
@@ -235,8 +235,8 @@ function bd_loader() {
         for bd_dir_sh in "${bd_loader_dir}"/*.sh ; do
 
             # don't source itself ...
-            [ "${bd_dir_sh}" == "${BASH_SOURCE}" ] && continue
-            [ "${bd_dir_sh}" == "${BD_SOURCE}" ] && continue
+            [ "${bd_dir_sh}" == "${BASH_SOURCE}" ] && continue # relative location
+            [ "${bd_dir_sh}" == "${BASH_SOURCE##*/}" ] && continue # basename
 
             if [ -r "${bd_dir_sh}" ]; then
                 if [ ${#BD_DEBUG} -gt 0 ]; then
@@ -339,7 +339,7 @@ if [ "${1}" == "update" ]; then
     return $?
 fi
 
-[ ${BD_ID} ] && return 0 # prevent multiple executions (due to recursive links, etc); or, to prevent execution, set BD_ID
+[ "${BD_ID}" != "" ] && return 0 # prevent multiple executions (due to recursive links, etc); or, to prevent execution, set BD_ID
 
 #
 # init
