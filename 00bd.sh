@@ -236,6 +236,7 @@ function bd_loader() {
 
             # don't source itself ...
             bd_dir_sh_realpath="$(bd_realpath "${BASH_SOURCE}")"
+            bd_debug "bd_dir_sh_realpath = ${bd_dir_sh_realpath}" 31
             [ "${bd_dir_sh}" == "${bd_dir_sh_realpath}" ] && bd_debug "${FUNCNAME} ${bd_dir_sh} matches relative path" 13 && continue # relative location
             [ "${bd_dir_sh}" == "${bd_dir_sh_realpath##*/}" ] && bd_debug "${FUNCNAME}) ${bd_dir_sh} matches basename" 13 && continue # basename
 
@@ -267,7 +268,19 @@ function bd_realpath() {
 
     [ -z "${bd_realpath_name}" ] && return 1
 
-    [ -r "${bd_realpath_name}" ] && [ -d "${bd_realpath_name}" ] && bd_realpath_name="$(cd "${bd_realpath_name}" &>/dev/null; pwd -P)"
+    local bd_realpath_basename bd_realpath_dirname
+    if [ -r "${bd_realpath_name}" ]; then
+        if [ -d "${bd_realpath_name}" ]; then
+            bd_realpath_name="$(cd "${bd_realpath_name}" &>/dev/null; pwd -P)"
+        else
+            bd_realpath_dirname="${bd_realpath_name%/*}"
+            if [ -d "${bd_realpath_dirname}" ]; then
+                bd_realpath_basename="${bd_realpath_name##*/}"
+                bd_realpath_name="$(cd "${bd_realpath_dirname}" &>/dev/null; pwd -P)"
+                bd_realpath_name+="/${bd_realpath_basename}"
+            fi
+        fi
+    fi
 
     printf "${bd_realpath_name}"
 }
