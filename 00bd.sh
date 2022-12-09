@@ -5,7 +5,7 @@
 
 # https://github.com/bash-d/bd/blob/main/README.md
 
-export BD_VERSION=0.35
+export BD_VERSION=0.36
 
 # prevent non-bash shells (for now)
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
@@ -41,7 +41,7 @@ function bd_ansi() {
 function bd_aliases() {
     bd_debug "function ${FUNCNAME}(${@})" 15
 
-    alias bd="source ${BD_HOME}/.bashrc"
+    [ -f "${BD_HOME}/.bashrc" ] && alias bd="source '${BD_HOME}/.bashrc'" || alias bd="source '${BD_HOME}/.bash_profile'"
 }
 
 # add a specific subdirectory via bd_bagger; a single 'bag' is simply a subdirectory in ${BD_PATH}
@@ -63,7 +63,7 @@ function bd_bag() {
         bag_dir=${bag_dir//\/\//\/}
         bd_debug "1 bag_dir = ${bag_dir} [bag]" 3
 
-        bag_dir="$(bd_realdir "${bag_dir}")"
+        bag_dir="$(bd_realpath "${bag_dir}")"
         bd_debug "2 bag_dir = ${bag_dir} [bag]" 3
 
         bd_bagger "${bag_dir}"
@@ -84,7 +84,7 @@ function bd_bagger() {
 
     [ ! -d "${bd_bagger_dir}" ] && return 1
 
-    bd_bagger_dir="$(bd_realdir "${bd_bagger_dir}")"
+    bd_bagger_dir="$(bd_realpath "${bd_bagger_dir}")"
     bd_debug "2 bd_bagger_dir = ${bd_bagger_dir}" 4
 
     [ -z "${BD_BAG_DIRS}" ] && BD_BAG_DIRS=()
@@ -126,7 +126,7 @@ function bd_bagger_file() {
             [ ${#HOME} -gt 0 ] && [ -r "${HOME}" ] && [ -d "${HOME}" ] && bd_dir="${bd_dir/#\~/$HOME}"
             bd_debug "3 bd_dir = ${bd_dir}" 3
 
-            bd_dir="$(bd_realdir "${bd_dir}")"
+            bd_dir="$(bd_realpath "${bd_dir}")"
             bd_debug "4 bd_dir = ${bd_dir}" 3
 
             if [[ "${bd_dir}" == *"/"* ]]; then
@@ -231,12 +231,13 @@ function bd_loader() {
     if [ -d "${bd_loader_dir}" ]; then
         [ ! -x "${SHELL}" ] && return 1
 
-        local bd_dir_sh
+        local bd_dir_sh bd_dir_sh_realpath
         for bd_dir_sh in "${bd_loader_dir}"/*.sh ; do
 
             # don't source itself ...
-            [ "${bd_dir_sh}" == "${BASH_SOURCE}" ] && continue # relative location
-            [ "${bd_dir_sh}" == "${BASH_SOURCE##*/}" ] && continue # basename
+            bd_dir_sh_realpath="$(bd_realpath "${BASH_SOURCE}")"
+            [ "${bd_dir_sh}" == "${bd_dir_sh_realpath}" ] && bd_debug "${FUNCNAME} ${bd_dir_sh} matches relative path" 13 && continue # relative location
+            [ "${bd_dir_sh}" == "${bd_dir_sh_realpath##*/}" ] && bd_debug "${FUNCNAME}) ${bd_dir_sh} matches basename" 13 && continue # basename
 
             if [ -r "${bd_dir_sh}" ]; then
                 if [ ${#BD_DEBUG} -gt 0 ]; then
@@ -259,16 +260,16 @@ function bd_loader() {
 }
 
 # semi-portable readlink/realpath
-function bd_realdir() {
+function bd_realpath() {
     bd_debug "function ${FUNCNAME}(${@})" 15
 
-    local bd_realdir_name="$1"
+    local bd_realpath_name="$1"
 
-    [ -z "${bd_realdir_name}" ] && return 1
+    [ -z "${bd_realpath_name}" ] && return 1
 
-    [ -r "${bd_realdir_name}" ] && [ -d "${bd_realdir_name}" ] && bd_realdir_name="$(cd "${bd_realdir_name}" &>/dev/null; pwd -P)"
+    [ -r "${bd_realpath_name}" ] && [ -d "${bd_realpath_name}" ] && bd_realpath_name="$(cd "${bd_realpath_name}" &>/dev/null; pwd -P)"
 
-    printf "${bd_realdir_name}"
+    printf "${bd_realpath_name}"
 }
 
 # unset & reset initial bashrc
