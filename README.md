@@ -31,10 +31,6 @@ cd /etc/profile.d && sudo curl --output Z00bd.sh https://raw.githubusercontent.c
 
 * `BD_DEBUG` = `<LEVEL>` # Integer > 0.  Enable additional debugging output to stderr.
 
-## changelog
-
-* 0.30 - enhanced debugging; more functional code; accept source arguments (reload, update); embedded and export BD_USER & BD_HOME
-
 ## copyright
 
     Copyright (c) 2022 Joseph Tingiris
