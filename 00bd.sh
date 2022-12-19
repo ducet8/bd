@@ -1,9 +1,16 @@
 # Copyright (c) 2022 Joseph Tingiris
 # https://github.com/bash-d/bd/blob/main/LICENSE.md
 
-# 00bd.sh: an out-of-bag themed, machine learning directory autoloader for bash shell source
+# 00bd.sh: an autoloader for bash shell source
 
 # https://github.com/bash-d/bd/blob/main/README.md
+
+#
+# metadata
+#
+
+# bash.d: exports BD_DEBUG BD_ID BD_HOME BD_USER BD_VERSION
+# vim:ts=4:sw=4
 
 export BD_VERSION=0.36
 
@@ -470,10 +477,3 @@ bd_aliases
 #
 
 bd_load "${BD_BAG_DIRS[@]}"
-
-#
-# metadata
-#
-
-# vim:ts=4:sw=4
-# bash.d: exports BD_DEBUG BD_ID BD_HOME BD_USER BD_VERSION
