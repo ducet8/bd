@@ -1,6 +1,6 @@
 # bash.d
 
-a bash autoloader
+an autoloader for bash shell source
 
 ## basic user install
 
@@ -75,7 +75,7 @@ WIP
 
 ```
 B)      /etc/profile
-S)      /etc/profile.d/00bd.sh (for normal distributions, this should be first in most natural sort orders, therefore sourced first, which is the goal.  This allows for /etc/.bash.d/*.sh to be sourced before the distribution's /etc/profile.d)  This also leaves room for stuff before 00bd.sh, e.g. 000*)
+S)      /etc/profile.d/Z00bd.sh (for normal distributions, this should be first in most natural sort orders, therefore sourced first, which is the goal.  This allows for /etc/.bash.d/*.sh to be sourced before the distribution's /etc/profile.d)  This also leaves room for stuff before 00bd.sh, e.g. 000*)
 S)      /etc/bash.d/*.sh
 
 D)      /etc/profile.d/sh.local (fedora)
