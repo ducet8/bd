@@ -242,17 +242,20 @@ function bd_loader() {
 
         local bd_loader_files=()
 
-        # work-around for broken bsd/macos LC_COLLATE (TODO: tested on macos, but not bsd.  make it work for bsd too)
+        # bsd/macos LC_COLLATE hack (make it work consistently, like ISO 14651 defines [numbers, UPPERCASE, lowercase])
+        # https://blog.zhimingwang.org/macos-lc_collate-hunt
+        # https://collation-charts.org/fbsd54/
+        # (TODO: tested on macos, but not bsd.  make it work for bsd too)
         if [ -r /sbin/apfs_hfs_convert ]; then
-            for bd_loader_sh in "${bd_loader_dir}/0"*; do
-                [ -r $bd_loader_sh ] && echo $bd_loader_sh
+            for bd_loader_sh in "${bd_loader_dir}/0"*".sh" "${bd_loader_dir}/0"*".bash" "${bd_loader_dir}/1"*".sh" "${bd_loader_dir}/1"*".bash" "${bd_loader_dir}/2"*".sh" "${bd_loader_dir}/2"*".bash" "${bd_loader_dir}/3"*".sh" "${bd_loader_dir}/3"*".bash" "${bd_loader_dir}/4"*".sh" "${bd_loader_dir}/4"*".bash" "${bd_loader_dir}/5"*".sh" "${bd_loader_dir}/5"*".bash" "${bd_loader_dir}/6"*".sh" "${bd_loader_dir}/6"*".bash" "${bd_loader_dir}/7"*".sh" "${bd_loader_dir}/7"*".bash" "${bd_loader_dir}/8"*".sh" "${bd_loader_dir}/8"*".bash" "${bd_loader_dir}/9"*".sh" "${bd_loader_dir}/9"*".bash" "${bd_loader_dir}/"[a-z]*".sh" "${bd_loader_dir}/"[a-z]*".bash" "${bd_loader_dir}/"[A-Z]*".sh" "${bd_loader_dir}/"[A-Z]*".bash"; do
+                [ -r $bd_loader_sh ] && bd_loader_files+=("${bd_loader_sh}")
             done
         else
             for bd_loader_sh in "${bd_loader_dir}"/*.sh "${bd_loader_dir}"/*.bash; do
                 [ -r $bd_loader_sh ] && bd_loader_files+=("${bd_loader_sh}")
             done
         fi
-        unset bd_loader_sh
+        unset -v bd_loader_sh
 
         for bd_loader_file in "${bd_loader_files[@]}"; do
 
