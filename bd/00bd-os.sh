@@ -23,6 +23,7 @@ if [ "${BD_OS}" == 'darwin' ]; then
         BD_OS_VERSION=$(/usr/bin/sw_vers -buildVersion 2> /dev/null)
         BD_OS_VERSION_ID=$(/usr/bin/sw_vers -productVersion 2> /dev/null)
     fi
+    [ ${#BD_OS_NAME} -gt 0 ] && [ ${#BD_OS_VERSION_ID} -gt 0 ] && BD_OS_PRETTY_NAME="${BD_OS_NAME} ${BD_OS_VERSION_ID}"
 fi
 
 if [ "${BD_OS}" == 'linux' ]; then
