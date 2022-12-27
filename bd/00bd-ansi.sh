@@ -8,7 +8,7 @@
 #
 
 # bash.d: exports BD_DEBUG BD_ID BD_HOME BD_USER BD_VERSION
-# vim:ts=4:sw=4
+# vim: ft=sh:ts=4:sw=4
 
 #
 # functions
