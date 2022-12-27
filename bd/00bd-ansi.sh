@@ -17,9 +17,9 @@
 function bd_ansi() {
     local bd_ansi_code="${1}"
 
-    [ "${bd_ansi_code}" == "" ] && return 0
+    [ ${#bd_ansi_code} -eq 0 ] && return 0
 
-    [[ "${TERM}" != *"color"* ]] && return 0
+    [[ "${TERM}" != *"color" ]] && return 0
 
     # all color 256 terms should support these ...
 
