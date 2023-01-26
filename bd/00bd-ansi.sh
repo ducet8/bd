@@ -131,4 +131,3 @@ function bd_ansi() {
 
     return 0
 }
-export -f bd_ansi
