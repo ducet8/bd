@@ -195,7 +195,8 @@ function bd_ansi() {
     esac
 
     if [ "${2}" != "" ]; then
-        echo -n "${2}"
+        shift
+        echo -n "${@}"
         echo -e "${bd_ansi_reset_all}"
     fi
 
