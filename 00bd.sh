@@ -15,6 +15,8 @@
 # init
 #
 
+export BD_VERSION=0.40.1
+
 # prevent non-bash bourne compatible shells
 [ "${BASH_SOURCE}" == "" ] && return &> /dev/null
 
@@ -237,6 +239,19 @@ function bd_bagger_file() {
     unset -v bd_bagger_file_name
 }
 
+# add BD_ environment variables from config file
+function bd_config_file() {
+    bd_debug "function ${FUNCNAME}(${@})" 15
+
+    local bd_config_file_name="$1"
+
+    # TODO: parse config file & export variables
+    if [ -r "${bd_config_file_name}" ]; then
+        #grep ^BD_ "${bd_config_file_name}"
+        bd_debug "WIP" 99
+    fi
+}
+
 # formatted debug output
 function bd_debug() {
 
@@ -348,7 +363,11 @@ function bd_unset() {
     local bd_function bd_functions=()
 
     bd_functions+=(bd_aliases)
-    bd_functions+=(bd_ansi)
+    if [ "${BD_ANSI_EXPORT}" == "1" ] || [ "${BD_ANSI_EXPORT}" == "true" ]; then
+        export -f bd_ansi
+    else
+        bd_functions+=(bd_ansi)
+    fi
     bd_functions+=(bd_ansi_chart)
     bd_functions+=(bd_ansi_chart_16)
     bd_functions+=(bd_ansi_chart_16_bg)
@@ -361,6 +380,7 @@ function bd_unset() {
     bd_functions+=(bd_bag)
     bd_functions+=(bd_bagger)
     bd_functions+=(bd_bagger_file)
+    bd_functions+=(bd_config_file)
     bd_functions+=(bd_debug)
     bd_functions+=(bd_debug_ms)
     bd_functions+=(bd_realpath)
@@ -512,9 +532,7 @@ fi
 
 # set common globals
 
-export BD_VERSION=0.40.0
-
-BD_CONF_FILES=".bash.d.conf .bd.conf"
+BD_CONFIG_FILES=".bash.d.conf .bd.conf"
 
 BD_BAG_DIR="etc/bash.d"
 
@@ -596,6 +614,12 @@ export BD_ID
 # 0 - export BD_USER, BD_HOME, & BD_BASH_INIT_FILE; (WIP)
 #
 
+for BD_CONFIG_FILE in ${BD_CONFIG_FILES}; do
+    [ -f "${BD_HOME}/${BD_CONFIG_FILE}" ] && [ -r "${BD_HOME}/${BD_CONFIG_FILE}" ] && bd_config_file "${BD_HOME}/${BD_CONFIG_FILE}" && break
+    [ -f "${HOME}/${BD_CONFIG_FILE}" ] && [ -r "${HOME}/${BD_CONFIG_FILE}" ] && bd_config_file "${HOME}/${BD_CONFIG_FILE}" && break
+    [ -f "${PWD}/${BD_CONFIG_FILE}" ] && [ -r "${PWD}/${BD_CONFIG_FILE}" ] && bd_config_file "${PWD}/${BD_CONFIG_FILE}" && break
+done
+
 [ "${EUID}" == "0" ] && USER=root
 
 [ "${USER}" != "root" ] && unset BD_USER # honor sudo --preserve-env=BD_USER
@@ -662,10 +686,10 @@ if [ "${BD_HOME}" != "${HOME}" ]; then
     if [ ${#BD_HOME} -gt 0 ] && [ "${BD_HOME}" != "/" ]; then
         bd_debug "BD_HOME = ${BD_HOME}" 4
 
-        for BD_CONF_FILE in ${BD_CONF_FILES}; do
-            [ -f "${BD_HOME}/${BD_CONF_FILE}" ] && [ -r "${BD_HOME}/${BD_CONF_FILE}" ] && bd_bagger_file "${BD_HOME}/${BD_CONF_FILE}" && break
+        for BD_CONFIG_FILE in ${BD_CONFIG_FILES}; do
+            [ -f "${BD_HOME}/${BD_CONFIG_FILE}" ] && [ -r "${BD_HOME}/${BD_CONFIG_FILE}" ] && bd_bagger_file "${BD_HOME}/${BD_CONFIG_FILE}" && break
         done
-        unset -v BD_CONF_FILE
+        unset -v BD_CONFIG_FILE
 
         [ -d "${BD_HOME}/${BD_BAG_DIR}" ] && [ -r "${BD_HOME}/${BD_BAG_DIR}" ] && bd_bagger "${BD_HOME}/${BD_BAG_DIR}"
 
@@ -684,10 +708,10 @@ fi
 if [ ${#HOME} -gt 0 ] && [ "${HOME}" != "/" ]; then
     bd_debug "HOME = ${HOME}" 4
 
-    for BD_CONF_FILE in ${BD_CONF_FILES}; do
-        [ -f "${HOME}/${BD_CONF_FILE}" ] && [ -r "${HOME}/${BD_CONF_FILE}" ] && bd_bagger_file "${HOME}/${BD_CONF_FILE}" && break
+    for BD_CONFIG_FILE in ${BD_CONFIG_FILES}; do
+        [ -f "${HOME}/${BD_CONFIG_FILE}" ] && [ -r "${HOME}/${BD_CONFIG_FILE}" ] && bd_bagger_file "${HOME}/${BD_CONFIG_FILE}" && break
     done
-    unset -v BD_CONF_FILE
+    unset -v BD_CONFIG_FILE
 
     [ -d "${HOME}/${BD_BAG_DIR}" ] && [ -r "${HOME}/${BD_BAG_DIR}" ] && bd_bagger "${HOME}/${BD_BAG_DIR}"
 
@@ -701,10 +725,10 @@ fi
 # 5 - add current working directory via bd_bagger
 #
 
-for BD_CONF_FILE in ${BD_CONF_FILES}; do
-    [ -f "${PWD}/${BD_CONF_FILE}" ] && [ -r "${PWD}/${BD_CONF_FILE}" ] && bd_bagger_file "${PWD}/${BD_CONF_FILE}" && break
+for BD_CONFIG_FILE in ${BD_CONFIG_FILES}; do
+    [ -f "${PWD}/${BD_CONFIG_FILE}" ] && [ -r "${PWD}/${BD_CONFIG_FILE}" ] && bd_bagger_file "${PWD}/${BD_CONFIG_FILE}" && break
 done
-unset -v BD_CONF_FILE
+unset -v BD_CONFIG_FILE
 
 if [ -d "${PWD}/${BD_BAG_DIR}" ] && [ -r "${PWD}/${BD_BAG_DIR}" ]; then
     bd_bagger "${PWD}/${BD_BAG_DIR}"

@@ -1,3 +1,7 @@
+# 0.40.1
+
+- fix regression; honor BD_ANSI_EXPORT [to export bd_ansi()]
+
 # 0.40.0
 
 - handle arguments differently
