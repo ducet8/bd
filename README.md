@@ -1,6 +1,6 @@
 # bash.d
 
-an autoloader for bash shell source
+bash directory (bash.d) autoloader
 
 ## basic user install
 
