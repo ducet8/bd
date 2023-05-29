@@ -9,7 +9,7 @@
 # metadata
 #
 
-# bash.d: exports BD_BASH_INIT_FILE BD_DEBUG BD_DIR BD_HOME BD_ID BD_OS BD_USER BD_VERSION
+# bash.d: exports BD_BASH_INIT_FILE BD_DEBUG BD_DIR BD_HOME BD_ID BD_OS BD_SOURCE BD_USER BD_VERSION
 
 #
 # init
@@ -246,10 +246,10 @@ function bd_config_file() {
         local bd_config_file_line bd_config_file_variable_name bd_config_file_variable_value
         while read -r bd_config_file_line; do
             # only BD_* variables are supported
-            [[ "${bd_config_file_line}" != "BD_"* ]] && continue
+            [[ "${bd_config_file_line}" != 'BD_'* ]] && continue
 
             # these will break bd & are not supported in config files
-            [[ "${bd_config_file_line}" == "BD_DIR"* ]] && continue
+            [[ "${bd_config_file_line}" == 'BD_DIR'* ]] && continue
 
             bd_debug "bd_config_file_line=${bd_config_file_line}" 20
 
@@ -267,7 +267,7 @@ function bd_config_file() {
 
             bd_debug "bd_config_file_variable_value=${bd_config_file_variable_value}" 11
 
-            if [ "${bd_config_file_variable_name}" == "BD_BAG_DIR" ]; then
+            if [ "${bd_config_file_variable_name}" == 'BD_BAG_DIR' ]; then
                 [ "${bd_config_file_preload}" == "preload" ] && continue
                 bd_debug "export BD_CONFIG_BAG_DIRS+=(\"${bd_config_file_variable_value}\")" 15
                 export BD_CONFIG_BAG_DIRS+=("${bd_config_file_variable_value}")
@@ -444,16 +444,16 @@ function bd_unset() {
                 bd_unset_variable_name="${bd_unset_variable%%=*}"
 
                 # don't unset these
-                [ "${bd_unset_variable_name}" == "BD_BASH_INIT_FILE" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_DEBUG" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_HOME" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_ID" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_LEARN" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_MAIN" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_SOURCE" ] && continue
-                [ "${bd_unset_variable_name}" == "BD_USER" ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_BASH_INIT_FILE' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_DEBUG' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_HOME' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_ID' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_LEARN' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_MAIN' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_SOURCE' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_USER' ] && continue
 
-                if [ "${bd_unset_variable_name}" == "BD_BAG_DIRS" ]; then
+                if [ "${bd_unset_variable_name}" == 'BD_BAG_DIRS' ]; then
                     if bd_true ${BD_LEARN}; then
                         bd_unset_variable_names+=("${bd_unset_variable_name}")
                     fi
@@ -496,7 +496,6 @@ function bd_unset() {
         bd_unset_variable_names+=(BD_BAG_DEFAULT_DIR)
         bd_unset_variable_names+=(BD_CONFIG_FILE)
         bd_unset_variable_names+=(BD_MAIN)
-        bd_unset_variable_names+=(BD_SOURCE)
 
     fi
 
@@ -612,12 +611,12 @@ if [ "${1}" == 'env' ]; then
     for BD_DECLARE in $(declare -g 2> /dev/null); do
         if [[ "${BD_DECLARE}" == 'BD_'*'='* ]]; then
             BD_VARIABLE_NAME="${BD_DECLARE%%=*}"
-            [ "${BD_VARIABLE_NAME}" == "BD_DECLARE" ] && continue
-            [ "${BD_VARIABLE_NAME}" == "BD_OIFS" ] && continue
-            [ "${BD_VARIABLE_NAME}" == "BD_VARIABLE_NAME" ] && continue
+            [ "${BD_VARIABLE_NAME}" == 'BD_DECLARE' ] && continue
+            [ "${BD_VARIABLE_NAME}" == 'BD_OIFS' ] && continue
+            [ "${BD_VARIABLE_NAME}" == 'BD_VARIABLE_NAME' ] && continue
             printf "%-30s" "${BD_VARIABLE_NAME}"
             printf " = "
-            if [ "${BD_VARIABLE_NAME}" == "BD_BAG_DIRS" ]; then
+            if [ "${BD_VARIABLE_NAME}" == 'BD_BAG_DIRS' ]; then
                 echo "${BD_BAG_DIRS[@]}"
             else
                 echo "${!BD_VARIABLE_NAME}"
