@@ -7,7 +7,7 @@
 # metadata
 #
 
-# bash.d: exports BD_ROOT_BASH_BIN BD_ROOT_SH BD_ROOT_SUDO_BIN BD_ROOT_SUDO_NOPASSWD
+# bash.d: exports BD_ROOT_BASH_BIN BD_ROOT_SUDO_BIN BD_ROOT_SUDO_NOPASSWD
 
 #
 # main
@@ -18,9 +18,6 @@ if [ "${0}" == "${BASH_SOURCE}" ]; then
     printf "\n${BASH_SOURCE} | ERROR | this code is not designed to be executed (instead, 'source ${BASH_SOURCE}')\n\n"
     exit 1
 fi
-
-# bd source id
-export BD_ROOT_SH="${BASH_SOURCE}"
 
 if [ "${USER}" != "root" ]; then
     # bash & sudo must be in the default path
@@ -39,6 +36,8 @@ if [ "${USER}" != "root" ]; then
 
                 BD_ROOT_SUDO_MUST_PRESERVE_ENV="BD_HOME,BD_USER,BD_BASH_INIT_FILE"
                 [ "${BD_ROOT_SUDO_PRESERVE_ENV}" != "" ] && BD_ROOT_SUDO_MUST_PRESERVE_ENV+=",${BD_ROOT_SUDO_PRESERVE_ENV}"
+                [[ "${BD_ROOT_SUDO_MUST_PRESERVE_ENV}" != *",SSH_AUTH_SOCK"* ]] && [ "${SSH_AUTH_SOCK}" != "" ] && BD_ROOT_SUDO_MUST_PRESERVE_ENV+=",SSH_AUTH_SOCK"
+
                 BD_ROOT_SUDO_MUST_PRESERVE_ENV="${BD_ROOT_SUDO_MUST_PRESERVE_ENV//,,/,}"
 
                 alias bd-root="${BD_ROOT_SUDO_BIN} --preserve-env=${BD_ROOT_SUDO_MUST_PRESERVE_ENV} -u root ${BD_ROOT_BASH_BIN} --init-file ${BD_BASH_INIT_FILE}"
