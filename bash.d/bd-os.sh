@@ -76,9 +76,11 @@ if [ "${BD_OS}" == 'linux' ]; then
         IFS="${OIFS}" && unset OIFS
     fi
 
-    if [ ${#BD_OS_ID} -eq 0 ] && [ -r /etc/redhat-release ]; then
-        BD_OS_ID='rhel'
-    fi
+    [ ${#BD_OS_ID} -eq 0 ] && [ -r /etc/redhat-release ] && BD_OS_ID='rhel'
+fi
+
+if [ "${BD_OS}" == 'windows' ]; then
+    [ -f /usr/bin/cygwin*.dll ] && BD_OS_ID="cygwin"
 fi
 
 if [ ${#BD_OS_ID} -gt 0 ]; then

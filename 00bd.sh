@@ -768,13 +768,13 @@ if type -P uname &> /dev/null; then
     fi
 
     case "${BD_OS_KERNEL_NAME}" in
-        bsd*)                       BD_OS='bsd';;
-        darwin*)                    BD_OS='darwin';;
-        linux*)                     BD_OS='linux';;
-        solaris*)                   BD_OS='solaris';;
-        cygwin*|mingw*|win*)        BD_OS='windows';;
-        linux*microsoft*)           BD_OS='wsl';;
-        *)                          BD_OS="unknown:${BD_OS_KERNEL_NAME}"
+        bsd*)                           BD_OS='bsd';;
+        darwin*)                        BD_OS='darwin';;
+        linux*)                         BD_OS='linux';;
+        solaris*)                       BD_OS='solaris';;
+        cygwin*|mingw*|win*)            BD_OS='windows';;
+        linux*microsoft*)               BD_OS='wsl';;
+        *)                              BD_OS="unknown:${BD_OS_KERNEL_NAME}"
     esac
 
     unset -v BD_OS_KERNEL_NAME
