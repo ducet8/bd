@@ -34,7 +34,7 @@ if [ "${USER}" != "root" ]; then
                     BD_ROOT_SUDO_NOPASSWD=1
                 fi
 
-                BD_ROOT_SUDO_MUST_PRESERVE_ENV="BD_HOME,BD_USER,BD_BASH_INIT_FILE"
+                BD_ROOT_SUDO_MUST_PRESERVE_ENV="BD_HOME,BD_USER"
                 [ "${BD_ROOT_SUDO_PRESERVE_ENV}" != "" ] && BD_ROOT_SUDO_MUST_PRESERVE_ENV+=",${BD_ROOT_SUDO_PRESERVE_ENV}"
                 [[ "${BD_ROOT_SUDO_MUST_PRESERVE_ENV}" != *",SSH_AUTH_SOCK"* ]] && [ "${SSH_AUTH_SOCK}" != "" ] && BD_ROOT_SUDO_MUST_PRESERVE_ENV+=",SSH_AUTH_SOCK"
 
