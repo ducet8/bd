@@ -64,7 +64,6 @@ if ! type -t bd_ansi &> /dev/null; then
     function bd_ansi() {
         return
     }
-    export -f bd_ansi
 fi
 
 # call bd_autoloader on an array (of directories)
@@ -826,12 +825,13 @@ export BD_HOME
 
 if shopt -q login_shell; then
     # login shell
-    [ -r "${BD_HOME}/.bash_profile" ] && BD_BASH_INIT_FILE="${BD_HOME}/.bash_profile"
-else
-    # not a login shell
-    [ ${#BD_BASH_INIT_FILE} -eq 0 ] && [ -r "${BD_HOME}/.bashrc" ] && BD_BASH_INIT_FILE="${BD_HOME}/.bashrc"
     [ ${#BD_BASH_INIT_FILE} -eq 0 ] && [ -r "${BD_HOME}/.bash_profile" ] && BD_BASH_INIT_FILE="${BD_HOME}/.bash_profile"
+    [ ${#BD_BASH_INIT_FILE} -eq 0 ] && [ -r ~/.bash_profile ] && BD_BASH_INIT_FILE=~/.bash_profile
 fi
+
+# not a login shell, or it is a login shell and there's no ~/.bash_profile
+[ ${#BD_BASH_INIT_FILE} -eq 0 ] && [ -r "${BD_HOME}/.bashrc" ] && BD_BASH_INIT_FILE="${BD_HOME}/.bashrc"
+[ ${#BD_BASH_INIT_FILE} -eq 0 ] && [ -r "${BD_HOME}/.bash_profile" ] && BD_BASH_INIT_FILE="${BD_HOME}/.bash_profile"
 
 export BD_BASH_INIT_FILE
 
