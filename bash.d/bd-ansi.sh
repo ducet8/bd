@@ -21,7 +21,7 @@ fi
 
 # exit/return for terms that may not support following functions
 case "${TERM}" in
-    alacritty*|ansi*|*color)
+    alacritty*|ansi*|*color|xterm)
         ;;
     *)
         if [ "${0}" == "${BASH_SOURCE}" ]; then
