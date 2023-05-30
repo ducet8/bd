@@ -41,9 +41,9 @@ if [ "${USER}" == "root" ]; then
 else
     # support normal user
 
-    export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
+    export BD_DIR=${BD_DIR:-~/.bd}
 
-    [ -r ~/.bd ] && export BD_DIR=${BD_DIR:-~/.bd}
+    export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
 
     # if 00bd.sh is not found, try to automatically install bd
     [ ${#BD_DIR} -gt 0 ] && [ ! -r "${BD_DIR}/00bd.sh" ] && cd && git clone "${BD_GIT_URL}" "${BD_DIR}"

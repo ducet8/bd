@@ -1,3 +1,47 @@
+# 0.40.2
+
+- 00bd.sh: significant changes to main logic & bootstrap order of operation
+- 00bd.sh: stop supporting .bash.d.conf
+- 00bd.sh: support (multiple) config files (${BD_DIR}/.bd.conf, /etc/bd.conf, ${HOME}/.bd.conf, ${BD_HOME}/.bd.conf, ${PWD}/.bd.conf)
+- 00bd.sh: support adding multiple, custom BD_BAG_DIR directories via config file(s)
+- 00bd.sh: support setting & automatically exporting custom BD_* variables via config file(s)
+- 00bd.sh: support 'bd env' argument
+- 00bd.sh: support 'bd pull/update/upgrade' argument aliases
+- 00bd.sh: support 'bd reload/restart/start' argument aliases
+- 00bd.sh: support BD_ANSI_EXPORT=1 and BD_DEBUG_EXPORT=1 to leave the bd_ansi() & bd_debug() functions exported to the environment
+- 00bd.sh: support BD_LEARN=1 to prevent unsetting BD_BAG_DIRS every time (WIP)
+- 00bd.sh: test login/non-login shell to determine whether to source .bash_profile or .bashrc
+- 00bd.sh: test variable lengths versus empty strings
+- 00bd.sh: increase all function debug levels to 55
+- 00bd.sh: more comments
+- 00bd.sh: more consistent variable naming
+- 00bd.sh: use single quotes when appropriate
+- 00bd.sh: bd_aliases() logic changed
+- 00bd.sh: bd_ansi() is now exported for the duration of main
+- 00bd.sh: bd_bagger() increase some debug levels (less noise at low levels)
+- 00bd.sh: bd_config_bag_dirs() added
+- 00bd.sh: bd_config_file() replaced bd_bagger_file()
+- 00bd.sh: bd_debug() doesn't complain if bd_ansi isn't found
+- 00bd.sh: bd_debug() is now exported for the duration of main
+- 00bd.sh: bd_reload() renamed to bd_start()
+- 00bd.sh: bd_true() added
+- 00bd.sh: bd_unset() logic changed
+- 00bd.sh: bd_upgrade() now only supports git (pull)
+- 00bd.sh: bd_uptime_ms() renamed to bd_uptime()
+- .bashrc: example
+- .bash_profile: example
+- bash.d/bd-active.sh: removed
+- bash.d/bd-ansi.sh: support xterm
+- bash.d/bd-ansi.sh: export bd_ansi()
+- bash.d/bd-os.sh: support BD_OS_ID=cygwin
+- bash.d/bd-os.sh: updated metadata
+- bash.d/bd-root.sh: preserve SSH_AUTH_SOCK if it's set
+- bash.d/bd-root.sh: don't preserve BD_BASH_INIT_FILE
+- bash.d/bd-root.sh: test for executable su
+- bash.d/bd-root.sh: updated metadata
+- bin/bd-ansi: exit if BD_DIR is not set or readable
+- bin/bd-debug: exit if BD_DIR is not set or readable
+
 # 0.40.1
 
 - fix regression; honor BD_ANSI_EXPORT [to export bd_ansi()]
