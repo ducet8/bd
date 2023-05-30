@@ -658,7 +658,7 @@ fi
 if [ "${1}" == 'pull' ] || [ "${1}" == 'update' ] || [ "${1}" == 'upgrade' ]; then
     bd_debug "${BD_SOURCE} upgrade" 1
 
-    [ ! -O "${BD_SOURCE}" ] && printf "\nrun bd update as the owner of ${BD_SOURCE} ...\n\n" && ls -l "${BD_SOURCE}" && echo && return 1
+    [ ! -O "${BD_SOURCE}" ] && printf "\nrun 'bd ${1}' as the owner of ${BD_SOURCE} ...\n\n" && ls -l "${BD_SOURCE}" && echo && return 1
 
     bd_upgrade "${BD_DIR}"
 
