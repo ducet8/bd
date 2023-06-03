@@ -271,7 +271,7 @@ function bd_config_files() {
     if [ ${#BD_BAG_DEFAULT_DIR} -gt 0 ] && [ ${#BD_DIR} -gt 0 ]; then
         [ -f "${BD_DIR}/${BD_CONFIG_FILE}" ] && [ -r "${BD_DIR}/${BD_CONFIG_FILE}" ] && bd_config_file "${BD_DIR}/${BD_CONFIG_FILE}" ${1}
 
-        if [ "${1}" != 'preload' ] && [ -d "${BD_BAG_DIR}/${BD_BAG_DEFAULT_DIR}" ] && [ -r "${BD_BAG_DIR}/${BD_BAG_DEFAULT_DIR}" ]; then
+        if [ "${1}" != 'preload' ] && [ -d "${BD_DIR}/${BD_BAG_DEFAULT_DIR}" ] && [ -r "${BD_DIR}/${BD_BAG_DEFAULT_DIR}" ]; then
             bd_bag "${BD_DIR}/${BD_BAG_DEFAULT_DIR}"
 
             bd_config_bag_dirs "${BD_DIR}"
