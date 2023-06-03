@@ -10,7 +10,7 @@
 # bash.d: exports BD_ROOT_BASH_BIN BD_ROOT_SUDO_BIN BD_ROOT_SUDO_NOPASSWD
 
 #
-# main
+# init
 #
 
 # prevent non-sourced execution
@@ -18,6 +18,10 @@ if [ "${0}" == "${BASH_SOURCE}" ]; then
     printf "\n${BASH_SOURCE} | ERROR | this code is not designed to be executed (instead, 'source ${BASH_SOURCE}')\n\n"
     exit 1
 fi
+
+#
+# main
+#
 
 if [ "${USER}" != "root" ]; then
     # bash & sudo must be in the default path
