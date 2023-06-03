@@ -285,12 +285,12 @@ function bd_config_files() {
         if [ "${1}" != 'preload' ] && [ -d "/${BD_BAG_DEFAULT_DIR}" ] && [ -r "/${BD_BAG_DEFAULT_DIR}" ]; then
             bd_bag "/${BD_BAG_DEFAULT_DIR}"
 
-            bd_config_bag_dirs /
-
             # sub-directories
             for bd_config_files_bag_dir in "/${BD_BAG_DEFAULT_DIR}"/*; do
                 [ -d "${bd_config_files_bag_dir}" ] && [ -r "${bd_config_files_bag_dir}" ] && bd_bag "${bd_config_files_bag_dir}"
             done
+
+            bd_config_bag_dirs /
         fi
     fi
 
@@ -301,12 +301,12 @@ function bd_config_files() {
         if [ "${1}" != 'preload' ] && [ -d "${HOME}/${BD_BAG_DEFAULT_DIR}" ] && [ -r "${HOME}/${BD_BAG_DEFAULT_DIR}" ]; then
             bd_bag "${HOME}/${BD_BAG_DEFAULT_DIR}"
 
-            bd_config_bag_dirs "${HOME}"
-
             # sub-directories
             for bd_config_files_bag_dir in "${HOME}/${BD_BAG_DEFAULT_DIR}"/*; do
                 [ -d "${bd_config_files_bag_dir}" ] && [ -r "${bd_config_files_bag_dir}" ] && bd_bag "${bd_config_files_bag_dir}"
             done
+
+            bd_config_bag_dirs "${HOME}"
         fi
     fi
 
@@ -317,12 +317,12 @@ function bd_config_files() {
         if [ "${1}" != 'preload' ] && [ -d "${BD_HOME}/${BD_BAG_DEFAULT_DIR}" ] && [ -r "${BD_HOME}/${BD_BAG_DEFAULT_DIR}" ]; then
             bd_bag "${BD_HOME}/${BD_BAG_DEFAULT_DIR}"
 
-            bd_config_bag_dirs "${BD_HOME}"
-
             # sub-directories
             for bd_config_files_bag_dir in "${BD_HOME}/${BD_BAG_DEFAULT_DIR}"/*; do
                 [ -d "${bd_config_files_bag_dir}" ] && [ -r "${bd_config_files_bag_dir}" ] && bd_bag "${bd_config_files_bag_dir}"
             done
+
+            bd_config_bag_dirs "${BD_HOME}"
         fi
     fi
 
@@ -333,12 +333,12 @@ function bd_config_files() {
         if [ "${1}" != 'preload' ] && [ -d "${PWD}/${BD_BAG_DEFAULT_DIR}" ] && [ -r "${PWD}/${BD_BAG_DEFAULT_DIR}" ]; then
             bd_bag "${PWD}/${BD_BAG_DEFAULT_DIR}"
 
-            bd_config_bag_dirs "${PWD}"
-
             # sub-directories
             for bd_config_files_bag_dir in "${PWD}/${BD_BAG_DEFAULT_DIR}"/*; do
                 [ -d "${bd_config_files_bag_dir}" ] && [ -r "${bd_config_files_bag_dir}" ] && bd_bag "${bd_config_files_bag_dir}"
             done
+
+            bd_config_bag_dirs "${PWD}"
         fi
     fi
 
@@ -540,6 +540,7 @@ function bd_unset() {
                 [ "${bd_unset_variable_name}" == 'BD_MAIN' ] && continue
                 [ "${bd_unset_variable_name}" == 'BD_SOURCE' ] && continue
                 [ "${bd_unset_variable_name}" == 'BD_USER' ] && continue
+                [ "${bd_unset_variable_name}" == 'BD_VERSION' ] && continue
 
                 [[ "${bd_unset_variable_name}" == 'BD_'*'EXPORT'* ]] && continue
 
