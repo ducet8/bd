@@ -1,3 +1,25 @@
+# 0.41.0
+
+- 00bd.sh: significant changes to main logic
+- 00bd.sh: always test if a directory or file is readable
+- 00bd.sh: bd_config_files preload & bd_unset_finish for all arguments except functions
+- 00bd.sh: don't unset BD_*EXPORT* variables that were set in the parent environment (e.g. via .bashrc)
+- 00bd.sh: expand (replace) ~ in config files
+- 00bd.sh: revised bd_ansi stub logic
+- 00bd.sh: bd_bag() removed
+- 00bd.sh: bd_bagger() renamed to bd_bag()
+- 00bd.sh: support BD_ANSI_SOURCED (interally)
+- 00bd.sh: bd_config_files() added
+- 00bd.sh: bd_exclusive_variables() added
+- bash.d/ moved to etc/bash.d/
+- etc/bash.d/bd-ansi.sh: comments
+- etc/bash.d/bd-ansi.sh: support TERM=screen* and TERM=*tmux*
+- etc/bash.d/bd-ansi.sh: prevent loading multiple times; export BD_ANSI_SOURCED=1
+- etc/bash.d/bd-os.sh: comments
+- etc/bash.d/bd-root.sh: comments
+- etc/bash.d/bd-root.sh: bd-root-profile alias renamed to bd-root-login
+- bin/bd-ansi: source moved etc/bash.d/bd-ansi.sh
+
 # 0.40.2
 
 - 00bd.sh: significant changes to main logic & bootstrap order of operation
