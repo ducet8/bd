@@ -2,7 +2,7 @@
 
 bash directory (bash.d) autoloader
 
-## basic user install
+## user install
 
 1) git clone `bd` into your home directory
 
