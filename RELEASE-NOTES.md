@@ -1,3 +1,9 @@
+# 0.42.0
+
+- 00bd.sh: don't use function keyword
+- bin/bd-ansi: don't use function keyword
+- etc/bash.d/bd-ansi.sh: don't use function keyword
+
 # 0.41.0
 
 - 00bd.sh: significant changes to main logic

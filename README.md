@@ -2,7 +2,7 @@
 
 bash directory (bash.d) autoloader
 
-## user install
+## user install (simple)
 
 1) git clone `bd` into your home directory
 
@@ -25,8 +25,8 @@ cd && cp .bd/.bash* .
 ## supported environment variables
 
 * `BD_DEBUG` = `<level>` # Integer > 0.  Enable additional output to stderr.
-* `BD_ANSI_EXPORT` = `1` # 1, true, or yes. Leave the `bd_ansi()` function exported to your environment (for use in other scripts).
-* `BD_DEBUG_EXPORT` = `1` #Use 1, true, or yes. Leave the `bd_debug()` function exported to your environment (for use in other scripts).
+* `BD_ANSI_EXPORT` = `1` # 1, true, or yes. Leave function `bd_ansi()` exported to the environment (for use in other scripts).
+* `BD_DEBUG_EXPORT` = `1` #Use 1, true, or yes. Leave function `bd_debug()` exported to the environment (for use in other scripts).
 * `BD_LEARN` = `1` # Use 1, true, or yes to leave the BD_BAG_DIRS() array set when bd is re-sourced.
 
 ## license
