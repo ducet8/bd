@@ -51,6 +51,6 @@ else
     if [ ${#BD_DIR} -gt 0 ] && [ -r "${BD_DIR}/00bd.sh" ]; then
         source "${BD_DIR}/00bd.sh" ${@}
     else
-        printf "\n${BD_DIR}/00bd.sh file not found readable (install git & run 'cd && git clone ${BD_GIT_URL}')\n\n"
+        printf "\n${BD_DIR}/00bd.sh file not found readable (install git & run 'cd && git clone ${BD_GIT_URL} ${BD_DIR}')\n\n"
     fi
 fi
