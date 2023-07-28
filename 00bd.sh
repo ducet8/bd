@@ -15,7 +15,7 @@
 # init
 #
 
-export BD_VERSION=0.42.0
+export BD_VERSION=0.42.1
 
 export BD_BAG_DEFAULT_DIR='etc/bash.d'
 
@@ -37,8 +37,6 @@ fi
 # set bd aliases
 bd_aliases() {
     bd_debug "${FUNCNAME}(${@})" 55
-
-    [ ${#BD_BASH_INIT_FILE} -gt 0 ] && [ -r "${BD_BASH_INIT_FILE}" ] && alias bd="source '${BD_BASH_INIT_FILE}'"
 
     if ! type -P bd-ansi &> /dev/null; then
         if [ -r "${BD_DIR}/bin/bd-ansi" ]; then
@@ -677,7 +675,7 @@ bd_uptime() {
 }
 
 #
-# boot
+# bootstrap
 #
 
 export BD_DEBUG=${BD_DEBUG:-0} # level >0 enables debugging
@@ -685,10 +683,10 @@ export BD_DEBUG=${BD_DEBUG:-0} # level >0 enables debugging
 export BD_SOURCE="$(bd_realpath "${BASH_SOURCE}")"
 
 #
-# arguments
+# options
 #
 
-# functions argument (first, otherwise functions will be unset)
+# functions argument (first, otherwise embedded functions will be unset)
 if [ "${1}" == 'functions' ]; then
     return $?
 fi
@@ -785,7 +783,10 @@ if [ "${1}" == '' ] || [ "${1}" == 'reload' ] || [ "${1}" == 'restart' ] || [ "$
 fi
 
 # prevent main loading multiple times (i.e. due to recursive links, improper sourcing, etc)
-[ ${#BD_ID} -gt 0 ] && return 0
+if [ ${#BD_ID} -gt 0 ]; then
+    type bd &> /dev/null && bd help
+    return 0
+fi
 
 #
 # main
@@ -922,8 +923,39 @@ export BD_BASH_INIT_FILE
 bd_config_files && bd_debug "BD_BAG_DIRS = ${BD_BAG_DIRS[@]}" 1
 
 #
-# set environment aliases
+# set dynamic aliases & functions
 #
+
+if [ ${#BD_BASH_INIT_FILE} -gt 0 ] && [ -r "${BD_BASH_INIT_FILE}" ]; then
+    bd() { 
+        local bd_help=''
+        bd_help+="\n"
+        bd_help+="usage: bd [option]\n"
+        bd_help+="\n"
+        bd_help+="options:\n"
+        bd_help+="\n"
+        bd_help+="  ['' | restart | start]          - (default) load & unset bd_functions, invoke autoloader\n"
+        bd_help+="\n"
+        bd_help+="  [dir]                           - display BD_BAG_DIRS values\n"
+        bd_help+="  [env]                           - display BD_ environment variables & values\n"
+        bd_help+="  [functions]                     - load & do not unset bd_ functions; do not invoke autoloader\n"
+        bd_help+="  [pull]                          - pull latest version of bd from GitHub\n"
+        bd_help+="\n"
+        bd_help+="  [help | --help | -h]            - this message\n"
+        bd_help+="\n"
+
+        case "${1}" in 
+            help|--help|-h)
+                printf "${bd_help}"
+                return
+                ;;
+            *)
+                source "${BD_BASH_INIT_FILE}"
+                ;;
+        esac
+    }
+    export -f bd
+fi
 
 bd_aliases
 
