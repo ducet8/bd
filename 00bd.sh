@@ -812,8 +812,8 @@ export BD_DIR="${BD_SOURCE%/*}"
 
 bd_debug "BD_DIR = ${BD_DIR}" 2
 
-if [ ${#BD_DIR} -gt 0 ] && [ -d "${BD_DIR}" ] && cd "${BD_DIR}" && type -P git &> /dev/null; then
-    export BD_GIT_URL="$(git remote get-url $(git remote 2> /dev/null) 2> /dev/null)"
+if [ ${#BD_DIR} -gt 0 ] && [ -d "${BD_DIR}" ] && type -P git &> /dev/null; then
+    export BD_GIT_URL="$(cd "${BD_DIR}" && git remote get-url $(git remote 2> /dev/null) 2> /dev/null)"
 else
     export BD_GIT_URL="https://github.com/bash-d/bd"
 fi
