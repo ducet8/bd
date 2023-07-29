@@ -1,3 +1,9 @@
+# 0.42.2
+- 00bd.sh: bd() option argument handling, help, and automatically setting BD_GIT_URL
+
+# 0.42.1
+- 00bd.sh: change bd alias to bd() function
+
 # 0.42.0
 
 - 00bd.sh: don't use function keyword
