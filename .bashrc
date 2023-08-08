@@ -25,8 +25,8 @@ if [ ${#PS1} -le 0 ]; then
     return
 fi
 
-if [ ${#SSH_CONNECTION} -gt 0 ] && [ ${#SSH_TTY} -eq 0 ] && [ ${#STY} -eq 0 ] && [ ${#TMUX} -eq 0 ]; then
-    # stop. ssh (scp/sftp), no tty, no screen, no tmux
+if [ ${#SSH_CONNECTION} -gt 0 ] && [ ${#SSH_TTY} -eq 0 ] && [ ${#STY} -eq 0 ] && [ ${#TMUX} -eq 0 ] && [ ${#VSCODE_GIT_IPC_HANDLE} -eq 0 ]; then
+    # stop. ssh (scp/sftp), no tty, no screen, no tmux, no vscode
     return
 fi
 
