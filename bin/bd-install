@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+
+# bd-install: bash-d/bd installer
+
+# Copyright (C) 2018-2023 Joseph Tingiris <joseph.tingiris@gmail.com>
+# https://github.com/bash-d/bd/blob/main/LICENSE.md
+
+export BD_INSTALL_GIT_URL=${BD_INSTALL_GIT_URL:-"https://githubusercontent.com/bash-d/bd/main/bin/bd-install"}
+
+#
+# init
+#
+
+# prevent sourced execution
+if [ "${0}" != "${BASH_SOURCE}" ]; then
+    printf "\n${BASH_SOURCE} | ERROR | this code is designed to be executed (instead, '${BASH_SOURCE}')\n\n"
+    return 1
+fi
+
+# abort & display a message
+bd_install_aborting() {
+    echo && echo "aborting ... ${@}" && echo
+    exit 1
+}
+
+# display (cli) usage options
+bd_install_usage() {
+    printf "\nusage: ${BASH_SOURCE} <append|replace>\n\n"
+    exit 99
+}
+
+#
+# main
+#
+
+# curl -L https://raw.githubusercontent.com/bash-d/bd/main/.bashrc -s _ --help
+
+if [ "${USER}" == "root" ]; then
+    bd_install_aborting "root/system installation is currently WIP; run ${0} as a normal user"
+fi
+
+[ "${1}" == "" ] && bd_install_usage
+[ "${1}" == "--help" ] && bd_install_usage
+
+BD_INSTALL_APPEND=0
+BD_INSTALL_REPLACE=0
+
+[ "${1}" == "append" ] && BD_INSTALL_APPEND=1
+[ "${1}" == "replace" ] && BD_INSTALL_REPLACE=1
+
+[ ${BD_INSTALL_APPEND} -eq 0 ] && [ ${BD_INSTALL_REPLACE} -eq 0 ] && bd_install_usage
+
+BD_INSTALL_REQUIRED=()
+BD_INSTALL_REQUIRED+=("cp")
+BD_INSTALL_REQUIRED+=("curl")
+BD_INSTALL_REQUIRED+=("diff")
+BD_INSTALL_REQUIRED+=("git")
+BD_INSTALL_REQUIRED+=("grep")
+
+for BD_INSTALL_REQUIRE in ${BD_INSTALL_REQUIRED[@]}; do
+    # ensure gnu dependency
+    if ! type -P ${BD_INSTALL_REQUIRE} &> /dev/null; then
+        bd_install_aborting "${BD_INSTALL_REQUIRE} executable not found; install gnu ${BD_INSTALL_REQUIRE}"
+    fi
+
+    # ensure gnu dependency works
+    if ! ${BD_INSTALL_REQUIRE} --version 2>&1 | grep -q ^${BD_INSTALL_REQUIRE}; then
+        bd_install_aborting "${BD_INSTALL_REQUIRE} executable not working as expected"
+    fi
+done
+unset BD_INSTALL_REQUIRE unset BD_INSTALL_REQUIRED
+
+[ ${#BD_DIR} -eq 0 ] && [ ${#BD_HOME} -gt 0 ] && export BD_DIR="${BD_HOME}/.bd"
+export BD_DIR=${BD_DIR:-~/.bd}
+
+BD_INSTALL_EXISTS=0
+if [ -r "${BD_DIR}/00bd.sh" ]; then
+    BD_INSTALL_EXISTS=1
+fi
+
+echo "BD_DIR=${BD_DIR}"
+echo
+
+export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
+
+if [ "${BD_INSTALL_EXISTS}" == "1" ]; then
+    echo "+ updating ${BD_GIT_URL} ..."
+    git pull ${BD_DIR}
+    [ $? -ne 0 ] && bd_install_aborting "'git pull ${BD_DIR}' failed"
+else
+    echo "+ installing ${BD_GIT_URL} ..."
+    git clone ${BD_GIT_URL} ${BD_DIR}
+    [ $? -ne 0 ] && bd_install_aborting "'git clone ${BD_GIT_URL} ${BD_DIR}' failed"
+fi
+echo
+
+[ ! -r "${BD_DIR}/.bash_profile" ] && bd_install_aborting "${BD_DIR}/.bash_profile file not found readable"
+[ ! -r "${BD_DIR}/.bashrc" ] && bd_install_aborting "${BD_DIR}/.bashrc file not found readable"
+
+if [ "${BD_INSTALL_APPEND}" == "1" ]; then
+    # append ~/.bash_profile
+    if [ -f ~/.bash_profile ]; then
+        BD_INSTALL_APPEND_BASH_PROFILE="$(grep -E -e ' (.|source) (.*)/.bashrc( |$|")' ~/.bash_profile 2> /dev/null)"
+        if [ ${#BD_INSTALL_APPEND_BASH_PROFILE} -gt 0 ]; then
+            echo "+ detected ~/.bashrc already sourced in ~/.bash_profile ..."
+        else
+            echo "+ appending ~/.bashrc to ~/.bash_profile ..."
+            echo >> ~/.bash_profile
+            echo '. ~/.bashrc' >> ~/.bash_profile
+        fi
+        unset -v BD_INSTALL_APPEND_BASH_PROFILE
+        echo
+    fi
+
+    # append ~/.bashrc
+    if [ -f ~/.bashrc ]; then
+        BD_INSTALL_APPEND_BASHRC="$(grep -E -e ' (.|source) (.*)/00bd.sh( |$|")' ~/.bashrc) 2> /dev/null"
+        if [ ${#BD_INSTALL_APPEND_BASHRC} -gt 0 ]; then
+            echo "+ detected 00bd.sh already sourced in ~/.bashrc ..."
+        else
+            echo "+ appending ${BD_DIR}/00bd.sh to ~/.bashrc ..."
+            echo >> ~/.bashrc
+            echo "source \"${BD_DIR}/00bd.sh\" \${@}" >> ~/.bash_profile
+        fi
+        unset -v BD_INSTALL_APPEND_BASHRC
+        echo
+    fi
+fi
+
+if [ "${BD_INSTALL_REPLACE}" == "1" ]; then
+    # replace ~/.bash_profile
+    if ! diff -q ~/.bash_profile "${BD_DIR}/.bash_profile" &> /dev/null; then
+        echo "+ replacing ~/.bash_profile ..."
+        cp "${BD_DIR}/.bash_profile" ~/.bash_profile
+        [ $? -ne 0 ] && bd_install_aborting "'cp ${BD_DIR}/.bash_profile ~/.bash_profile' failed"
+    else
+        echo "+ ~/.bash_profile OK"
+    fi
+    echo
+
+    # replace ~/.bashrc
+    if ! diff -q ~/.bashrc "${BD_DIR}/.bashrc" &> /dev/null; then
+        echo "+ replacing ~/.bashrc ..."
+        cp "${BD_DIR}/.bashrc" ~/.bashrc
+        [ $? -ne 0 ] && bd_install_aborting "'cp ${BD_DIR}/.bashrc ~/.bashrc' failed"
+    else
+        echo "+ ~/.bashrc OK"
+    fi
+    echo
+fi
+
+exit $?
