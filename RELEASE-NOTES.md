@@ -1,3 +1,7 @@
+# 0.42.3
+- 00bd.sh: rename *config_bag* to *bag_config*
+- bin/bd-install: functional prototype
+
 # 0.42.2
 - 00bd.sh: bd() option argument handling, help, and automatically setting BD_GIT_URL
 

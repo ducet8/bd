@@ -2,7 +2,21 @@
 
 bash directory (bash.d) autoloader
 
-## user install (simple)
+# installing
+
+## automated bd-install (replace) [preferred]
+
+```
+curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ replace
+```
+
+## automated bd-install (append)
+
+```
+curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ append
+```
+
+## manual install
 
 1) git clone `bd` into your home directory
 
@@ -10,13 +24,7 @@ bash directory (bash.d) autoloader
 cd && git clone https://github.com/bash-d/bd .bd
 ```
 
-2) and, replace your `.bash_profile` and `.bashrc` with the included examples
-
-```sh
-cd && cp .bd/.bash* .
-```
-
-3) or, add something like this to the end of your `.bash_profile` and/or `.bashrc`
+2) add something like this to the end of your `.bash_profile` and/or `.bashrc`
 
 ```sh
 [ -r ~/.bd/00bd.sh ] && source ~/.bd/00bd.sh ${@}
