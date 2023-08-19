@@ -104,8 +104,8 @@ if [ "${BD_INSTALL_APPEND}" == "1" ]; then
             echo "+ detected ~/.bashrc already sourced in ~/.bash_profile ..."
         else
             if [ -f ~/.bash_profile ]; then
-                echo "+ backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_APPEND_BASH_PROFILE} ..."
-                cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_APPEND_BASH_PROFILE}
+                echo "+ backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP} ..."
+                cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}
                 echo
             fi
 
@@ -124,8 +124,8 @@ if [ "${BD_INSTALL_APPEND}" == "1" ]; then
             echo "+ detected 00bd.sh already sourced in ~/.bashrc ..."
         else
             if [ -f ~/.bashrc ]; then
-                echo "+ backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_APPEND_BASH_PROFILE} ..."
-                cp ~/.bashrc ~/.bashrc.${BD_INSTALL_APPEND_BASH_PROFILE}
+                echo "+ backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP} ..."
+                cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}
                 echo
             fi
 
@@ -142,8 +142,8 @@ if [ "${BD_INSTALL_REPLACE}" == "1" ]; then
     # replace ~/.bash_profile
     if ! diff -q ~/.bash_profile "${BD_DIR}/.bash_profile" &> /dev/null; then
         if [ -f ~/.bash_profile ]; then
-            echo "+ backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_APPEND_BASH_PROFILE} ..."
-            cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_APPEND_BASH_PROFILE}
+            echo "+ backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP} ..."
+            cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}
             echo
         fi
 
@@ -158,8 +158,8 @@ if [ "${BD_INSTALL_REPLACE}" == "1" ]; then
     # replace ~/.bashrc
     if ! diff -q ~/.bashrc "${BD_DIR}/.bashrc" &> /dev/null; then
         if [ -f ~/.bashrc ]; then
-            echo "+ backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_APPEND_BASH_PROFILE} ..."
-            cp ~/.bashrc ~/.bashrc.${BD_INSTALL_APPEND_BASH_PROFILE}
+            echo "+ backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP} ..."
+            cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}
             echo
         fi
 
