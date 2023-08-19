@@ -28,6 +28,8 @@ bd_install_usage() {
 # main
 #
 
+echo "0=$0, 1=$1, 2=$2" && echo
+
 if [ "${USER}" == "root" ]; then
     echo "root/system installation is currently WIP; run ${0} as a normal user" && return 1
 fi
@@ -40,8 +42,6 @@ BD_INSTALL_REPLACE=0
 
 [ "${1}" == "append" ] && BD_INSTALL_APPEND=1
 [ "${1}" == "replace" ] && BD_INSTALL_REPLACE=1
-
-echo "0=$0, 1=$1, 2=$2" && echo
 
 [ ${BD_INSTALL_APPEND} -eq 0 ] && [ ${BD_INSTALL_REPLACE} -eq 0 ] && bd_install_usage && return 99
 
