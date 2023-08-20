@@ -1,5 +1,15 @@
+# 0.43.0
+- bd.sh: renamed 00bd.sh to bd.sh
+- bd.sh: removed BD_ID; use BASH_ARGC to prevent recursion
+- bd.sh: lower debug level required to display the full BD_SOURCE path (1=basename, >=2=full path)
+- bd.sh: bd_debug() outputs to stderr
+- bd.sh: bd_realpath() now looks for realpath & readlink before resorting to bash hack
+- bd.sh: bd() no longer sources /etc/profile and/or /etc/bashrc; leave that to ~/.bashrc (etc)
+- bd.sh: set BD_GIT_URL
+- 00bd.sh: replaced with symbolic link
+
 # 0.42.3
-- 00bd.sh: rename *config_bag* to *bag_config*
+- 00bd.sh: renamed *config_bag* to *bag_config*
 - bin/bd-install: functional prototype
 
 # 0.42.2
