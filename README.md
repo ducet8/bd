@@ -27,7 +27,7 @@ cd && git clone https://github.com/bash-d/bd .bd
 2) add something like this to the end of your `.bash_profile` and/or `.bashrc`
 
 ```sh
-[ -r ~/.bd/00bd.sh ] && source ~/.bd/00bd.sh ${@}
+[ -r ~/.bd/bd.sh ] && source ~/.bd/bd.sh ${@}
 ```
 
 ## supported environment variables
