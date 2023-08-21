@@ -28,7 +28,7 @@ fi
 BD_CALLERS_MAX=3
 BD_CALLERS=$((${#BASH_ARGC[@]}-1))
 
-[ ${BD_CALLERS} -gt 1 ] && type bd &> /dev/null && unset -v BD_CALLERS BD_CALLERS_MAX && return
+#[ ${BD_CALLERS} -gt 1 ] && type bd &> /dev/null && unset -v BD_CALLERS BD_CALLERS_MAX && return
 [ ${BD_CALLERS} -gt ${BD_CALLERS_MAX} ] && unset -v BD_CALLERS BD_CALLERS_MAX && return
 
 if [ ${BD_CALLERS} -gt ${BD_CALLERS_MAX} ]; then

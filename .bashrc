@@ -37,20 +37,23 @@ fi
 if [ "${USER}" == "root" ]; then
     # support root (sudo) & bd-root aliases
 
-    [ ${#BD_HOME} -gt 0 ] && [ -r "${BD_HOME}/.bd" ] && export BD_DIR="${BD_HOME}/.bd" && [ -r ${BD_DIR}/00bd.sh ] && source ${BD_DIR}/00bd.sh ${@}
+    [ ${#BD_HOME} -gt 0 ] && [ -r "${BD_HOME}/.bd" ] && export BD_DIR="${BD_HOME}/.bd" && [ -r ${BD_DIR}/bd.sh ] && source ${BD_DIR}/bd.sh ${@}
 else
     # support normal user
 
     export BD_DIR=${BD_DIR:-~/.bd}
+    export BD_DIR=~/.bd
 
     export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
 
-    # if 00bd.sh is not found, try to automatically install bd
-    [ ${#BD_DIR} -gt 0 ] && [ ! -r "${BD_DIR}/00bd.sh" ] && cd && git clone "${BD_GIT_URL}" "${BD_DIR}"
+    # if bd.sh is not found, try to automatically install bd
+    if [ ${#BD_DIR} -gt 0 ] && [ ! -r "${BD_DIR}/bd.sh" ]; then
+        git clone "${BD_GIT_URL}" "${BD_DIR}" &> /dev/null
+    fi
 
-    if [ ${#BD_DIR} -gt 0 ] && [ -r "${BD_DIR}/00bd.sh" ]; then
-        source "${BD_DIR}/00bd.sh" ${@}
+    if [ ${#BD_DIR} -gt 0 ] && [ -r "${BD_DIR}/bd.sh" ]; then
+        source "${BD_DIR}/bd.sh" ${@}
     else
-        printf "\n${BD_DIR}/00bd.sh file not found readable (install git & run 'cd && git clone ${BD_GIT_URL} ${BD_DIR}')\n\n"
+        printf "\n${BD_DIR}/bd.sh file not found readable (install git & run 'cd && git clone ${BD_GIT_URL} ${BD_DIR}')\n\n"
     fi
 fi
