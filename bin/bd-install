@@ -59,12 +59,12 @@ BD_INSTALL_REQUIRED+=("mkdir")
 for BD_INSTALL_REQUIRE in ${BD_INSTALL_REQUIRED[@]}; do
     # ensure gnu dependency
     if ! type -P ${BD_INSTALL_REQUIRE} &> /dev/null; then
-        echo "${BD_INSTALL_REQUIRE} executable not found; install gnu ${BD_INSTALL_REQUIRE}" && exit 1
+        echo "# [ERROR] ... ${BD_INSTALL_REQUIRE} executable not found; install gnu ${BD_INSTALL_REQUIRE}" && exit 1
     fi
 
     # ensure gnu dependency works
     if ! ${BD_INSTALL_REQUIRE} --version 2>&1 | grep -q ^${BD_INSTALL_REQUIRE}; then
-        echo "${BD_INSTALL_REQUIRE} executable not working as expected" && exit 1
+        echo "# [ERROR] ... ${BD_INSTALL_REQUIRE} executable not working as expected" && exit 1
     fi
 done
 unset BD_INSTALL_REQUIRE unset BD_INSTALL_REQUIRED
@@ -79,30 +79,30 @@ fi
 
 echo
 [ ! -d "${BD_DIR}" ] && mkdir -p "${BD_DIR}"
-[ ! -d "${BD_DIR}" ] && echo "# '${BD_DIR}' directory not found" && echo && exit 1
-[ ! -w "${BD_DIR}" ] && echo "# '${BD_DIR}' directory not writable" && echo && exit 1
-echo "# BD_DIR=${BD_DIR} ... OK"
+[ ! -d "${BD_DIR}" ] && echo "# [ERROR] ... '${BD_DIR}' directory not found" && echo && exit 1
+[ ! -w "${BD_DIR}" ] && echo "# [ERROR] ... '${BD_DIR}' directory not writable" && echo && exit 1
+echo "# [OK] ... '${BD_DIR}' directory found"
 echo
 
 export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
 
 if [ "${BD_INSTALL_EXISTS}" == "1" ]; then
-    echo "# updating ${BD_GIT_URL} ..."
     BD_INSTALL_PWD="${PWD}"
     cd "${BD_DIR}"
     git pull ${BD_DIR} &> /dev/null
-    [ $? -ne 0 ] && echo "'git pull ${BD_DIR}' failed" && cd "${BD_INSTALL_PWD}" && exit 1
+    [ $? -ne 0 ] && echo "# [ERROR] ... 'git pull ${BD_DIR}' failed" && cd "${BD_INSTALL_PWD}" && exit 1
     cd "${BD_INSTALL_PWD}"
     unset -v BD_INSTALL_PWD
+    echo "# [OK] ... updating from '${BD_GIT_URL}"
 else
-    echo "# installing ${BD_GIT_URL} ..."
     git clone ${BD_GIT_URL} ${BD_DIR}
-    [ $? -ne 0 ] && echo "'git clone ${BD_GIT_URL} ${BD_DIR}' failed" && exit 1
+    [ $? -ne 0 ] && echo "# [ERROR] ... 'git clone ${BD_GIT_URL} ${BD_DIR}' failed" && exit 1
+    echo "# [OK] ... installed from '${BD_GIT_URL}'"
 fi
 echo
 
-[ ! -r "${BD_DIR}/.bash_profile" ] && echo "${BD_DIR}/.bash_profile file not found readable" && exit 1
-[ ! -r "${BD_DIR}/.bashrc" ] && echo "${BD_DIR}/.bashrc file not found readable" && exit 1
+[ ! -r "${BD_DIR}/.bash_profile" ] && echo "# [ERROR] ... ${BD_DIR}/.bash_profile file not found readable" && exit 1
+[ ! -r "${BD_DIR}/.bashrc" ] && echo "# [ERROR] ... ${BD_DIR}/.bashrc file not found readable" && exit 1
 
 BD_INSTALL_TIMESTAMP="$(date +%y%m%d%H%M%S%z)" # posix
 
@@ -111,17 +111,18 @@ if [ "${BD_INSTALL_APPEND}" == "1" ]; then
     if [ -f ~/.bash_profile ]; then
         BD_INSTALL_APPEND_BASH_PROFILE="$(grep -E -e ' (.|source) (.*)/.bashrc( |$|")' ~/.bash_profile 2> /dev/null)"
         if [ ${#BD_INSTALL_APPEND_BASH_PROFILE} -gt 0 ]; then
-            echo "# detected ~/.bashrc already sourced in ~/.bash_profile ..."
+            echo "# [OK] ... ~/.bashrc is sourced via ~/.bash_profile"
         else
             if [ -f ~/.bash_profile ]; then
-                echo "# backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP} ..."
                 cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}
+                [ $? -ne 0 ] && echo "# [ERROR] ... 'cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}' failed" && exit 1
+                echo "# [OK] ... backed up ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP}"
                 echo
             fi
-
-            echo "# appending ~/.bashrc to ~/.bash_profile ..."
             echo >> ~/.bash_profile
             echo '. ~/.bashrc' >> ~/.bash_profile
+            [ $? -ne 0 ] && echo "# [ERROR] ... 'echo '. ~/.bashrc' >> ~/.bash_profile' failed" && exit 1
+            echo "# [OK] ... appended ~/.bashrc to ~/.bash_profile"
         fi
         unset -v BD_INSTALL_APPEND_BASH_PROFILE
         echo
@@ -131,17 +132,18 @@ if [ "${BD_INSTALL_APPEND}" == "1" ]; then
     if [ -f ~/.bashrc ]; then
         BD_INSTALL_APPEND_BASHRC="$(grep -E -e ' (.|source) (.*)/bd.sh( |$|")' ~/.bashrc) 2> /dev/null"
         if [ ${#BD_INSTALL_APPEND_BASHRC} -gt 0 ]; then
-            echo "# detected bd.sh already sourced in ~/.bashrc ..."
+            echo "# [OK] ... bd.sh is sourced via ~/.bashrc"
         else
             if [ -f ~/.bashrc ]; then
-                echo "# backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP} ..."
                 cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}
+                [ $? -ne 0 ] && echo "# [ERROR] ... 'cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}' failed" && exit 1
+                echo "# [OK] ... backed up ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP}"
                 echo
             fi
-
-            echo "# appending ${BD_DIR}/bd.sh to ~/.bashrc ..."
             echo >> ~/.bashrc
-            echo "source \"${BD_DIR}/bd.sh\" \${@}" >> ~/.bash_profile
+            echo "source \"${BD_DIR}/bd.sh\" \${@}" >> ~/.bashrc
+            [ $? -ne 0 ] && echo "# [ERROR] ... 'echo "source \"${BD_DIR}/bd.sh\" \${@}" >> ~/.bashrc' failed" && exit 1
+            echo "# [OK] ... appended 'echo "source \"${BD_DIR}/bd.sh\" \${@}"' to ~/.bashrc"
         fi
         unset -v BD_INSTALL_APPEND_BASHRC
         echo
@@ -152,32 +154,32 @@ if [ "${BD_INSTALL_REPLACE}" == "1" ]; then
     # replace ~/.bash_profile
     if ! diff -q ~/.bash_profile "${BD_DIR}/.bash_profile" &> /dev/null; then
         if [ -f ~/.bash_profile ]; then
-            echo "# backup ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP} ..."
             cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}
+            [ $? -ne 0 ] && echo "# [ERROR] ... 'cp ~/.bash_profile ~/.bash_profile.${BD_INSTALL_TIMESTAMP}' failed" && exit 1
+            echo "# [OK] ... backed up ~/.bash_profile to ~/.bash_profile.${BD_INSTALL_TIMESTAMP}"
             echo
         fi
-
-        echo "# replacing ~/.bash_profile ..."
         cp "${BD_DIR}/.bash_profile" ~/.bash_profile
         [ $? -ne 0 ] && echo "'cp ${BD_DIR}/.bash_profile ~/.bash_profile' failed" && exit 1
+        echo "# [OK] ... replaced ~/.bash_profile"
     else
-        echo "# ~/.bash_profile ... OK"
+        echo "# [OK] ~/.bash_profile sources ~/.bashrc"
     fi
     echo
 
     # replace ~/.bashrc
     if ! diff -q ~/.bashrc "${BD_DIR}/.bashrc" &> /dev/null; then
         if [ -f ~/.bashrc ]; then
-            echo "# backup ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP} ..."
             cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}
+            [ $? -ne 0 ] && echo "# [ERROR] ... 'cp ~/.bashrc ~/.bashrc.${BD_INSTALL_TIMESTAMP}' failed" && exit 1
+            echo "# [OK] ... backed up ~/.bashrc to ~/.bashrc.${BD_INSTALL_TIMESTAMP}"
             echo
         fi
-
-        echo "# replacing ~/.bashrc ..."
         cp "${BD_DIR}/.bashrc" ~/.bashrc
         [ $? -ne 0 ] && echo "'cp ${BD_DIR}/.bashrc ~/.bashrc' failed" && exit 1
+        echo "# [OK] ... replaced ~/.bashrc"
     else
-        echo "# ~/.bashrc ... OK"
+        echo "# [OK] ... ~/.bashrc sources bd.sh"
     fi
     echo
 fi
