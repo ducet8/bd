@@ -4,21 +4,20 @@ bash directory (bash.d) autoloader
 
 # installing
 
-## automated bd-install (replace) [preferred]
+### what you will probably want to do
+```
+curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ append
+```
+
+### what I do
 
 ```
 curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ replace
 ```
 
-## automated bd-install (append)
+### try it
 
-```
-curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ append
-```
-
-## manual install
-
-1) git clone `bd` into your home directory
+1) clone `bd` into your home directory
 
 ```sh
 cd && git clone https://github.com/bash-d/bd .bd
@@ -33,8 +32,8 @@ cd && git clone https://github.com/bash-d/bd .bd
 ## supported environment variables
 
 * `BD_DEBUG` = `<level>` # Integer > 0.  Enable additional output to stderr.
-* `BD_ANSI_EXPORT` = `1` # 1, true, or yes. Leave function `bd_ansi()` exported to the environment (for use in other scripts).
-* `BD_DEBUG_EXPORT` = `1` #Use 1, true, or yes. Leave function `bd_debug()` exported to the environment (for use in other scripts).
+* `BD_ANSI_EXPORT` = `1` # 1, true, or yes will export the function `bd_ansi()` to the environment (for use in other scripts).
+* `BD_DEBUG_EXPORT` = `1` # 1, true, or yes will export the function `bd_debug()` to the environment (for use in other scripts).
 * `BD_LEARN` = `1` # Use 1, true, or yes to leave the BD_BAG_DIRS() array set when bd is re-sourced.
 
 ## license
