@@ -31,8 +31,16 @@ if [ ${#SSH_CONNECTION} -gt 0 ] && [ ${#SSH_TTY} -eq 0 ] && [ ${#STY} -eq 0 ] &&
 fi
 
 #
+# source system bashrc
+#
+
+[ -f /etc/bashrc ] && source /etc/bashrc
+
+#
 # bash.d (0.40+)
 #
+
+export BD_DEBUG=0
 
 if [ "${USER}" == "root" ]; then
     # support root (sudo) & bd-root aliases
@@ -41,7 +49,6 @@ if [ "${USER}" == "root" ]; then
 else
     # support normal user
 
-    export BD_DIR=${BD_DIR:-~/.bd}
     export BD_DIR=~/.bd
 
     export BD_GIT_URL=${BD_GIT_URL:-"https://github.com/bash-d/bd"}
