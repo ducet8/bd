@@ -163,7 +163,7 @@ if [ "${BD_INSTALL_REPLACE}" == "1" ]; then
         [ $? -ne 0 ] && echo "'cp ${BD_DIR}/.bash_profile ~/.bash_profile' failed" && exit 1
         echo "# [OK] ... replaced ~/.bash_profile"
     else
-        echo "# [OK] ~/.bash_profile sources ~/.bashrc"
+        echo "# [OK] ... ~/.bash_profile sources ~/.bashrc"
     fi
     echo
 
