@@ -95,7 +95,7 @@ if [ "${BD_INSTALL_EXISTS}" == "1" ]; then
     unset -v BD_INSTALL_PWD
     echo "# [OK] ... updating from '${BD_GIT_URL}"
 else
-    git clone ${BD_GIT_URL} ${BD_DIR}
+    git clone ${BD_GIT_URL} ${BD_DIR} && echo
     [ $? -ne 0 ] && echo "# [ERROR] ... 'git clone ${BD_GIT_URL} ${BD_DIR}' failed" && exit 1
     echo "# [OK] ... installed from '${BD_GIT_URL}'"
 fi
