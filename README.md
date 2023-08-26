@@ -5,6 +5,7 @@ bash directory (bash.d) autoloader
 # installing
 
 ### what you will probably want to do
+
 ```
 curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash -s _ append
 ```
@@ -18,16 +19,14 @@ curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash 
 ### try it
 
 1) clone `bd` into your home directory
-
-```sh
-cd && git clone https://github.com/bash-d/bd .bd
-```
+    ```sh
+    cd && git clone https://github.com/bash-d/bd .bd
+    ```
 
 2) add something like this to the end of your `.bash_profile` and/or `.bashrc`
-
-```sh
-[ -r ~/.bd/bd.sh ] && source ~/.bd/bd.sh ${@}
-```
+    ```sh
+    [ -r ~/.bd/bd.sh ] && source ~/.bd/bd.sh ${@}
+    ```
 
 ## supported environment variables
 
