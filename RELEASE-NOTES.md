@@ -1,3 +1,8 @@
+# 0.44.0 (breaking)
+
+- bd.sh:
+- 00bd.sh: removed; change all references to bd.sh
+
 # 0.43.0
 - bd.sh: renamed 00bd.sh to bd.sh
 - bd.sh: removed BD_ID; use BASH_ARGC to prevent recursion
