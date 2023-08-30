@@ -504,7 +504,9 @@ bd_start() {
     bd_debug "${FUNCNAME}(${@})" 55
 
     local bd_start_arg="${1}"
-    bd_debug "bd_start_arg=${bd_start_arg}" 2
+    [ ${#bd_start_arg} -gt 0 ] && bd_debug "bd_start_arg=${bd_start_arg}" 2
+
+    # what now?
 
     return 0
 }
@@ -803,9 +805,9 @@ if [ "${1}" == '' ] || [ "${1}" == 'restart' ] || [ "${1}" == 'start' ]; then
 
     if bd_start ${@}; then
         bd_debug "${BD_SOURCE} bd_start ${@} rc=0" 1
-        # success; do not return!
+        # success; continue to main (do not return!)
     else
-        # too many callers, etc.
+        # bd_start sent a non-zero rc; do not proceed
         return 1
     fi
 fi
@@ -839,7 +841,7 @@ if [ ${#BD_DIR} -gt 0 ] && [ -d "${BD_DIR}" ] && type -P git &> /dev/null; then
 fi
 [ ${#BD_GIT_URL} -eq 0 ] && export BD_GIT_URL="https://github.com/bash-d/bd"
 
-bd_debug "BD_GIT_URL = ${GIT_URL}" 2
+bd_debug "BD_GIT_URL = ${BD_GIT_URL}" 2
 
 #
 # preload config files
