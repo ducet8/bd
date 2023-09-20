@@ -23,7 +23,7 @@ curl -Ls https://raw.githubusercontent.com/bash-d/bd/main/bin/bd-install | bash 
     cd && git clone https://github.com/bash-d/bd .bd
     ```
 
-2) add something like this to the end of your `.bash_profile` and/or `.bashrc`
+2) paste this or add something like it to the end of your `.bash_profile` and/or `.bashrc`
     ```sh
     [ -r ~/.bd/bd.sh ] && source ~/.bd/bd.sh ${@}
     ```
